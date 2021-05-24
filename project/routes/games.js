@@ -25,4 +25,3 @@ router.post("/addEvent", async (req, res, next) => {
   });
 
 module.exports = router;
-

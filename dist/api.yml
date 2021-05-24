@@ -78,6 +78,45 @@ paths:
                   $ref: "#/components/schemas/League"
         "400":
           description: wrong input parameters
+
+  /games/addGame:
+    post:
+      tags:
+        - games
+      summary: A union manager from client is add game to league
+      description: a JSON object contains gameId to add to league
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/gamedata'
+        description: add new game
+      responses:
+        '200':
+          description: A new game has been added
+        '400':
+          description: Wrong input parameters
+
+  /games/addEvent:
+    post:
+      tags:
+        - games
+      summary: A union manager from client is add game to league
+      description: a JSON object contains gameId to add to league
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/eventslog'
+        description: add new event
+      responses:
+        '200':
+          description: A new event has been added
+        '400':
+          description: Wrong input parameters
+          
   /users/favoritePlayers:
     get:
       tags:
@@ -138,6 +177,7 @@ paths:
                 $ref: "#/components/schemas/Team"
         "404":
           description: teamId is not exists
+        
 components:
   schemas:
     User:
@@ -175,7 +215,7 @@ components:
           type: string
           description: user's email
           example: ladygaga@gmail.com
-        image-url:
+        imageUrl:
           pattern: URL
           type: string
           description: URL for the user's image
@@ -212,6 +252,22 @@ components:
           type: string
           description: current stage name
           example: Championship Round
+        NextGame:
+          type: object
+          description: Contains next game details
+          properties:
+            date:
+              type: string
+              example: 3/4/20201
+              description: date
+            home_team:
+              type: string
+              example: liverpool
+              description: the home team
+            away_team:
+              type: string
+              example: everton
+              description: the away team
     PlayerPreview:
       type: object
       properties:
@@ -239,8 +295,128 @@ components:
           type: string
           description: team name
           example: København
+        # coach:
+        #   type: string
+        #   description: coach name
+        #   example: tommy
         players:
           type: array
           items:
             type: object
             $ref: "#/components/schemas/PlayerPreview"
+        # pastGames:
+        #   type: array
+        #   items:
+        #     type: object
+        #     description: Contains past games
+        #     properties:
+        #       score:
+        #         type: string
+        #         example: 2-1
+        #         description: score game
+        #       date:
+        #         type: string
+        #         example: 3/3/2020
+        #         description: date
+        #       opponent:
+        #         type: string
+        #         example: liverpool
+        #         description: the opponent team
+        # futureGames:
+        #   type: array
+        #   items:
+        #     type: object
+        #     description: Contains future games
+        #     properties:
+        #       score:
+        #         type: string
+        #         example: 2-1
+        #         description: score game
+        #       date:
+        #         type: string
+        #         example: 3/3/2020
+        #         description: date
+        #       opponent:
+        #         type: string
+        #         example: liverpool
+        #         description: the opponent team
+
+    coachdata:
+      type: object
+      description: Contains data on coach
+      properties:
+        name:
+          type: string
+          example: Pep
+          description: coach name
+        team:
+          type: string
+          example: juventus
+          description: coach teams name
+        picture:
+          type: string
+          format: URL
+          example: https://cloudinary.com/juventus
+          description: coach image
+    
+    gamedata:
+      type: object
+      description: Contains data on new game
+      properties:
+        gameID:
+          type: integer
+          example: 231
+          description: the id of the game
+        gamedate:
+          type: date
+          example: 1000-01-01 
+          description: the date of the game
+        gametime:
+          type: time
+          example: 838:59:59
+          description: the time of the game
+        hometeam:
+          type: integer
+          example: 123
+          description: id of home team
+        awayteam:
+          type: integer
+          example: 456
+          description: id of away team
+        field:
+          type: string
+          example: Bloomfield
+          description: field
+        score:
+          type: string
+          example: 1-1
+          description: score
+
+    eventslog:
+      type: object
+      description: Contains game events
+      properties:
+        gameID:
+          type: integer
+          example: 231
+          description: the id of the game
+        eventdate:
+          type: string
+          example: 3-4-20201
+          description: date
+        eventtime:
+          type: string
+          example: 19:30:20
+          description: time
+        eventminute:
+          type: integer
+          example: 10
+          description: the minute of the game
+        dataevent:
+          type: string
+          example: 10
+          description: goal
+        player:
+          type: integer
+          example: 145
+          description: the id of the player who did the event
