@@ -2,7 +2,7 @@
 const DButils = require("./routes/utils/DButils");
 const axios = require("axios");
 const bcrypt = require("bcryptjs");
-require("dotenv").config();
+require("dotenv").config({path:'project/.env'})
 //#endregion
 //#region express configures
 var express = require("express");
@@ -52,6 +52,7 @@ const users = require("./routes/users");
 const league = require("./routes/league");
 const teams = require("./routes/teams");
 
+const games = require("./routes/games");
 //#endregion
 
 //#region cookie middleware
@@ -78,6 +79,7 @@ app.get("/alive", (req, res) => res.send("I'm alive"));
 app.use("/users", users);
 app.use("/league", league);
 app.use("/teams", teams);
+app.use("/games", games);
 app.use(auth);
 
 app.use(function (err, req, res, next) {
