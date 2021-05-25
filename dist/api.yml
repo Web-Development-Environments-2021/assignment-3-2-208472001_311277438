@@ -82,7 +82,7 @@ paths:
   /games/addGame:
     post:
       tags:
-        - games
+        - Games
       summary: A union manager from client is add game to league
       description: a JSON object contains gameId to add to league
       requestBody:
@@ -101,7 +101,7 @@ paths:
   /games/addEvent:
     post:
       tags:
-        - games
+        - Games
       summary: A union manager from client is add game to league
       description: a JSON object contains gameId to add to league
       requestBody:
@@ -368,18 +368,18 @@ components:
           example: 231
           description: the id of the game
         gamedate:
-          type: date
-          example: 1000-01-01 
-          description: the date of the game
+          type: string
+          example: 26-12-2015
+          descriptio/n: the date of the game
         gametime:
-          type: time
-          example: 838:59:59
+          type: string
+          example: '15:45:20'
           description: the time of the game
-        hometeam:
+        hometeamID:
           type: integer
           example: 123
           description: id of home team
-        awayteam:
+        awayteamID:
           type: integer
           example: 456
           description: id of away team
@@ -402,7 +402,7 @@ components:
           description: the id of the game
         eventdate:
           type: string
-          example: 3-4-20201
+          example: 3-4-2020
           description: date
         eventtime:
           type: string
@@ -416,7 +416,7 @@ components:
           type: string
           example: 10
           description: goal
-        player:
+        playerID:
           type: integer
           example: 145
           description: the id of the player who did the event
