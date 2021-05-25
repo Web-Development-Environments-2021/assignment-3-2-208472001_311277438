@@ -9,8 +9,8 @@ router.get("/teamFullDetails/:teamId", async (req, res, next) => {
   let team_details = [];
   teamID = req.params.teamId;
   try {
-    // const players_details = await players_utils.getPlayersByTeam(teamID);
-    // team_details.push(players_details);
+    const players_details = await players_utils.getPlayersByTeam(teamID);
+    team_details.push(players_details);
     //we should keep implementing team page.....
 
     past_home_team_games = await DButils.execQuery(`SELECT * FROM dbo.games WHERE hometeamID = ${teamID} AND score IS NOT NULL`);
