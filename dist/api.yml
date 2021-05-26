@@ -6,8 +6,7 @@ info:
 tags:
   - name: Users
   - name: Auth
-  - name: League
-  - name: Players
+  - name: league
   - name: Teams
   - name: Games
 paths:
@@ -121,7 +120,6 @@ paths:
     get:
       tags:
         - Users
-        - Players
       summary: Return the favorite players that were saved by user
       parameters:
       responses:
@@ -139,7 +137,6 @@ paths:
       summary: save player in the favorites list of a user
       tags:
         - Users
-        - Players
       requestBody:
         content:
           application/json:
@@ -155,6 +152,81 @@ paths:
           description: The player successfully saved as favorite
         "401":
           description: user is not authorized
+
+  /users/favoriteGames:
+    get:
+      tags:
+        - Users
+      summary: Return the favorite games that were saved by user
+      parameters:
+      responses:
+        "200":
+          description: data about the user's favorites games returned
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PlayerPrevie"
+        "401":
+          description: user is not authorized
+    post:
+      summary: save game in the favorites list of a user
+      tags:
+        - Users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                gameId:
+                  type: string
+                  description: game's id which the user saved
+                  example: 939
+      responses:
+        "201":
+          description: The game successfully saved as favorite
+        "401":
+          description: user is not authorized
+
+  /users/favoriteTeams:
+    get:
+      tags:
+        - Users
+      summary: Return the favorite teams that were saved by user
+      parameters:
+      responses:
+        "200":
+          description: data about the user's favorites teams returned
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Team"
+        "401":
+          description: user is not authorized
+    post:
+      summary: save team in the favorites list of a user
+      tags:
+        - Users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                teamsId:
+                  type: string
+                  description: teams's id which the user saved
+                  example: 123
+      responses:
+        "201":
+          description: The game successfully saved as favorite
+        "401":
+          description: user is not authorized
+
   /teams/teamFullDetails/{teamId}:
     get:
       summary: get full deatils about a team
@@ -229,14 +301,14 @@ components:
           minLength: 3
           maxLength: 8
           description: username conatins letters only
-          example: naorbe
+          example: ladygaga
         password:
           type: string
           minLength: 5
           maxLength: 10
           format: password
           description: password conatins at least one number and one special char
-          example: naor@55
+          example: lady@56
     League:
       type: object
       properties:
@@ -304,42 +376,52 @@ components:
           items:
             type: object
             $ref: "#/components/schemas/PlayerPreview"
-        # pastGames:
-        #   type: array
-        #   items:
-        #     type: object
-        #     description: Contains past games
-        #     properties:
-        #       score:
-        #         type: string
-        #         example: 2-1
-        #         description: score game
-        #       date:
-        #         type: string
-        #         example: 3/3/2020
-        #         description: date
-        #       opponent:
-        #         type: string
-        #         example: liverpool
-        #         description: the opponent team
-        # futureGames:
-        #   type: array
-        #   items:
-        #     type: object
-        #     description: Contains future games
-        #     properties:
-        #       score:
-        #         type: string
-        #         example: 2-1
-        #         description: score game
-        #       date:
-        #         type: string
-        #         example: 3/3/2020
-        #         description: date
-        #       opponent:
-        #         type: string
-        #         example: liverpool
-        #         description: the opponent team
+    GameDetails:
+      type: array
+      items:
+        type: object
+        description: Contains past games
+        properties:
+          date:
+            type: string
+            example: 3/3/2020
+            description: date
+          time:
+            type: string
+            example: 20:30
+            description: date
+          hometeam:
+            type: string
+            example: liverpool
+            description: the home team
+          awayteam:
+            type: string
+            example: manchester
+            description: the away team
+          field:
+            type: string
+            example: Anfield
+            description: the stadium
+
+
+    # futureGames:
+    #   type: array
+    #   items:
+    #     type: object
+    #     description: Contains future games
+    #     properties:
+    #       score:
+    #         type: string
+    #         example: 2-1
+    #         description: score game
+    #       date:
+    #         type: string
+    #         example: 3/3/2020
+    #         description: date
+    #       opponent:
+    #         type: string
+    #         example: liverpool
+    #         description: the opponent team
 
     coachdata:
       type: object

@@ -1,4 +1,5 @@
 const axios = require("axios");
+const DButils = require("./DButils");
 const LEAGUE_ID = 271;
 
 async function getLeagueDetails() {
@@ -27,8 +28,7 @@ async function getLeagueDetails() {
     league_name: league.data.data.name,
     current_season_name: league.data.data.season.data.name,
     current_stage_name: stage.data.data.name,
-    // next_game
-    // next game details should come from DB
+    nextgame: next_game
   };
 }
 exports.getLeagueDetails = getLeagueDetails;

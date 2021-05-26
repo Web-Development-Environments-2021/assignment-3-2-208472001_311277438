@@ -21,7 +21,7 @@ router.get("/teamFullDetails/:teamId", async (req, res, next) => {
     team_details.push(future_home_team_games);
     team_details.push(future_away_team_games);
 
-    res.send(team_details);
+    res.status(200).send(team_details);
   } catch (error) {
     next(error);
   }

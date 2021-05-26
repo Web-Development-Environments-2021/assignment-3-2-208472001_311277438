@@ -40,7 +40,7 @@ router.post("/Login", async (req, res, next) => {
       )
     )[0];
     // user = user[0];
-    console.log(user);
+    console.log(user.username);
 
     // check that username exists & the password is correct
     if (!user || !bcrypt.compareSync(req.body.password, user.password)) {
