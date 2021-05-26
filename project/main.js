@@ -45,7 +45,7 @@ const corsConfig = {
 app.use(cors(corsConfig));
 app.options("*", cors(corsConfig));
 
-const port = process.env.PORT || "3000";
+const port = process.env.PORT || "3001";
 
 const auth = require("./routes/auth");
 const users = require("./routes/users");
