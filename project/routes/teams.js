@@ -1,5 +1,4 @@
 var express = require("express");
-const { VarChar } = require("mssql");
 var router = express.Router();
 const DButils = require("./utils/DButils");
 const players_utils = require("./utils/players_utils");
