@@ -9,6 +9,7 @@ tags:
   - name: league
   - name: Teams
   - name: Games
+  - name: manager
 paths:
   /Register:
     post:
@@ -78,10 +79,10 @@ paths:
         "400":
           description: wrong input parameters
 
-  /games/addGame:
+  /manager/addGame:
     post:
       tags:
-        - Games
+        - manager
       summary: A union manager from client is add game to league
       description: a JSON object contains gameId to add to league
       requestBody:
@@ -97,10 +98,10 @@ paths:
         '400':
           description: Wrong input parameters
 
-  /games/addEvent:
+  /manager/addEvent:
     post:
       tags:
-        - Games
+        - manager
       summary: A union manager from client is add game to league
       description: a JSON object contains gameId to add to league
       requestBody:
@@ -113,6 +114,32 @@ paths:
       responses:
         '200':
           description: A new event has been added
+        '400':
+          description: Wrong input parameters
+
+  /manager/addScore:
+    put:
+      tags:
+        - manager
+      summary: A union manager from client is add score to game
+      description: a JSON object contains score to add to game
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                gameId:
+                  type: int
+                  description: game id which the user saved
+                  example: 56
+                score:
+                  type: string
+                  description: game id which the user saved
+                  example: 2-1
+      responses:
+        '200':
+          description: A new score has been added to game
         '400':
           description: Wrong input parameters
           
@@ -143,8 +170,8 @@ paths:
             schema:
               type: object
               properties:
-                playerId:
-                  type: string
+                gameId:
+                  type: int
                   description: player's id which the user saved
                   example: 85
       responses:
