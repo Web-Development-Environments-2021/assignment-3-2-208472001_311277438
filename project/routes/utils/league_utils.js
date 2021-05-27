@@ -31,4 +31,15 @@ async function getLeagueDetails() {
     nextgame: next_game
   };
 }
+
+
+
+
+
+
+
+
+
+
+
 exports.getLeagueDetails = getLeagueDetails;
