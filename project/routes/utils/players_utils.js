@@ -1,4 +1,5 @@
 const axios = require("axios");
+let api_domain = 'https://soccer.sportmonks.com/api/v2.0';
 
 async function getPlayerIdsByTeam(team_id) {
   let player_ids_list = [];
@@ -77,7 +78,7 @@ async function get_extra_details(PLAYER_ID) {
     `https://soccer.sportmonks.com/api/v2.0/players/${PLAYER_ID}`,
     {
       params: {
-        include: "team",
+        include: "team.league",
         api_token: process.env.api_token,
       },
     }
@@ -93,7 +94,67 @@ async function get_extra_details(PLAYER_ID) {
   };
 }
 
+async function get_player_id(PLAYER_NAME) {
+  const player = await axios.get(
+    `https://soccer.sportmonks.com/api/v2.0/players/search/${PLAYER_NAME}`,
+    {
+      params: {
+        api_token: process.env.api_token,
+      },
+    }
+  );
+
+  return {
+    player_id: player.data.data.player_id
+  };
+}
+
+
+async function get_player_info_by_name(PLAYER_NAME) {
+  player_ids_list = [];
+  const players = await axios.get(
+    `https://soccer.sportmonks.com/api/v2.0/players/search/${PLAYER_NAME}`,
+    {
+      params: {
+        include: "team.league",
+        api_token: process.env.api_token,
+      },
+    }
+  );
+
+    for (let i=0; i<players.data.data.length; i++)
+    {
+      try 
+      {
+        if (players.data.data[i].team.data.league.data.id == 271)
+        {
+          player_ids_list.push(players.data.data[i].player_id)
+        }
+      } catch (error) {
+        continue;
+      }
+
+    }
+
+    let relevant_players = await Promise.all(player_ids_list);
+
+    players_details = [];
+    for (let i=0; i< relevant_players.length; i++)
+    {
+        const player_info = await get_preview_details(relevant_players[i]);
+        players_details.push(player_info);
+    }
+
+
+  return players_details;
+    
+}
+
+
+
 exports.getPlayersByTeam = getPlayersByTeam;
 exports.getPlayersInfo = getPlayersInfo;
 exports.get_preview_details = get_preview_details;
 exports.get_extra_details = get_extra_details;
+exports.get_player_id = get_player_id;
+exports.get_player_info_by_name = get_player_info_by_name;

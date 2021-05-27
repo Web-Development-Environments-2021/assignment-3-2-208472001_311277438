@@ -48,7 +48,7 @@ router.get("/favoritePlayers", async (req, res, next) => {
     let favorite_players = [];
     const player_ids = await users_utils.getFavorite("favoritePlayers", user_id);
     for (let i = 0; i < player_ids.length; i++){
-      const extra_details = await players_utils.get_extra_details(player_ids[i].playerid);
+      const extra_details = await players_utils.get_preview_details(player_ids[i].playerid);
       favorite_players.push(extra_details);
     }
     res.status(200).send(favorite_players);
@@ -80,7 +80,7 @@ router.get("/favoriteTeams", async (req, res, next) => {
     let favorite_teams = [];
     const team_ids = await users_utils.getFavorite("favoriteTeams", user_id);
     for (let i = 0; i < team_ids.length; i++){
-      const extra_details = await players_utils.get_extra_details(team_ids[i].teamid);
+      const extra_details = await players_utils.get_preview_details(team_ids[i].teamid);
       favorite_teams.push(extra_details);
     }
     res.status(200).send(favorite_teams);
@@ -118,4 +118,6 @@ router.get("/favoriteGames", async (req, res, next) => {
   }
 });
 
+
 module.exports = router;
+

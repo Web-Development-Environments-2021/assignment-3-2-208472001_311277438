@@ -19,4 +19,14 @@ router.get("/homePage/:playerId", async (req, res, next) => {
   }
 });
 
+router.get("/search/:playerName", async (req, res, next) => {
+    playerNAME = req.params.playerName;
+    try {
+        const player_info = await players_utils.get_player_info_by_name(playerNAME);
+        res.send(player_info);
+    } catch (error) {
+      next(error);
+    }
+  });
+
 module.exports = router;

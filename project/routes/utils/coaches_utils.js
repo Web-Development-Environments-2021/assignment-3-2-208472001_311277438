@@ -2,7 +2,7 @@ const axios = require("axios");
 
 async function get_preview_details(COACH_ID) {
   const coach = await axios.get(
-    `https://soccer.sportmonks.com/api/v2.0/players/${COACH_ID}`,
+    `https://soccer.sportmonks.com/api/v2.0/coaches/${COACH_ID}`,
     {
       params: {
         api_token: process.env.api_token,
@@ -26,9 +26,9 @@ async function get_preview_details(COACH_ID) {
   };
 }
 
-async function get_extra_details(PLAYER_ID) {
+async function get_extra_details(COACH_ID) {
   const coach = await axios.get(
-    `https://soccer.sportmonks.com/api/v2.0/players/${PLAYER_ID}`,
+    `https://soccer.sportmonks.com/api/v2.0/coaches/${COACH_ID}`,
     {
       params: {
         api_token: process.env.api_token,
