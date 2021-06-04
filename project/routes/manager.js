@@ -46,13 +46,12 @@ router.put("/addScore", async (req, res, next) => {
         else {
             const gameid = req.body.gameId;
             const score = req.body.score;
-            
-            console.log("ddddddddddddddddddddddddddddddddddd");
-            console.log(gameid);
-            console.log(score);
 
             await DButils.execQuery(
                 `update dbo.games set score = '${score}' where gameID = '${gameid}'`
+            );
+            await DButils.execQuery(
+                `DELETE FROM dbo.favoriteGames WHERE gameID = '${gameid}'`
             );
             res.status(201).send("score has been added to game");
         }

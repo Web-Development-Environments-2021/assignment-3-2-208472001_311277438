@@ -8,7 +8,6 @@ tags:
   - name: Auth
   - name: league
   - name: Teams
-  - name: Games
   - name: manager
 paths:
   /Register:
@@ -276,7 +275,39 @@ paths:
                 $ref: "#/components/schemas/Team"
         "404":
           description: teamId is not exists
-        
+
+  /league/pastgames:
+    get:
+      tags:
+        - league
+      summary: Return the past games in the league
+      parameters:
+      responses:
+        "200":
+          description: data about the past game's returned
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/pastgames"
+
+  /league/futuregames:
+    get:
+      tags:
+        - league
+      summary: Return the past games in the league
+      parameters:
+      responses:
+        "200":
+          description: data about the past game's returned
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/futuregames"
+
 components:
   schemas:
     User:
@@ -430,25 +461,91 @@ components:
             example: Anfield
             description: the stadium
 
+    pastgames:
+      type: array
+      items:
+        type: object
+        description: Contains past games
+        properties:
+          gametimedate:
+            type: date
+            example: 26-12-2015
+            description: date
+          gametime:
+            type: string
+            example: 15:45:20
+            description: time
+          hometeamID:
+            type: integer
+            example: 123
+            description: time
+          awayteamID:
+            type: integer
+            example: 456
+            description: time
+          field:
+            type: string
+            example: bloomfield
+            description: time
+          score:
+            type: string
+            example: 1-1
+            description: score game
+          eventslog:
+            type: object
+            description: Contains game events
+            properties:
+              gameID:
+                type: integer
+                example: 939
+                description: the id of the game
+              eventdate:
+                type: string
+                example: 26-12-2015
+                description: date
+              eventtime:
+                type: string
+                example: 15:45:20
+                description: time
+              eventminute:
+                type: integer
+                example: 10
+                description: the minute of the game
+              dataevent:
+                type: string
+                example: goal
+                description: goal
+              playerID:
+                type: integer
+                example: 145
+                description: the id of the player who did the event
 
-    # futureGames:
-    #   type: array
-    #   items:
-    #     type: object
-    #     description: Contains future games
-    #     properties:
-    #       score:
-    #         type: string
-    #         example: 2-1
-    #         description: score game
-    #       date:
-    #         type: string
-    #         example: 3/3/2020
-    #         description: date
-    #       opponent:
-    #         type: string
-    #         example: liverpool
-    #         description: the opponent team
+    futuregames:
+      type: array
+      items:
+        type: object
+        description: Contains future games
+        properties:
+          gametimedate:
+            type: date
+            example: 3/3/2020
+            description: date
+          gametime:
+            type: string
+            example: 20:30
+            description: time
+          hometeamID:
+            type: integer
+            example: 123
+            description: time
+          awayteamID:
+            type: integer
+            example: 456
+            description: time
+          field:
+            type: string
+            example: bloomfield
+            description: time
 
     coachdata:
       type: object
