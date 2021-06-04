@@ -31,9 +31,6 @@ router.post("/favoritePlayers", async (req, res, next) => {
     const user_id = req.session.user_id;
     console.log(user_id);
     const player_id = req.body.playerId;
-    console.log("----------------------------------");
-    console.log(user_id);
-    console.log(player_id);
     await users_utils.markAsFavorite("Players",user_id, player_id);
     res.status(201).send("The player successfully saved as favorite");
   } catch (error) {
@@ -50,8 +47,8 @@ router.get("/favoritePlayers", async (req, res, next) => {
     let favorite_players = [];
     const player_ids = await users_utils.getFavorite("Player", user_id);
     for (let i = 0; i < player_ids.length; i++){
-      const extra_details = await players_utils.get_extra_details(player_ids[i].playerid);
-      favorite_players.push(extra_details);
+      const preview_details = await players_utils.get_preview_details(player_ids[i].playerid);
+      favorite_players.push(preview_details);
     }
     res.status(200).send(favorite_players);
   } catch (error) {
@@ -120,4 +117,6 @@ router.get("/favoriteGames", async (req, res, next) => {
   }
 });
 
+
 module.exports = router;
+

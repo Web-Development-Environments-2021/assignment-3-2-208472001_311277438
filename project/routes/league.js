@@ -54,5 +54,5 @@ router.get("/allgames", async (req, res, next) => {
     next(error);
   }
 });
-
 module.exports = router;
+

@@ -94,7 +94,102 @@ async function get_extra_details(PLAYER_ID) {
   };
 }
 
+// async function get_homePage_by_player_name(PLAYER_NAME) {
+//   const player = await axios.get(
+//     `https://soccer.sportmonks.com/api/v2.0/players/search/${PLAYER_NAME}`,
+//     {
+//       params: {
+//         include: "team.league",
+//         api_token: process.env.api_token,
+//       },
+//     }
+//   );
+
+//   // player.data.data.map((players) => player_list.push(players));
+
+//   let players_ids_list = [];
+//   let list_len = player.data.data.length;
+ 
+  
+//   for (let i=0; i< list_len; i++)
+//   {
+//     try
+//      {
+//       if (player.data.data[i].team.data.league.data.id == 271)
+//       {
+//         players_ids_list.push(player.data.data[i].player_id);
+
+//       }
+//     }
+//     catch (error) {
+//       continue;
+//     }
+//   }
+
+//   return await Promise.all(players_ids_list);;
+
+// }
+
+
+async function get_player_info_by_name(PLAYER_NAME, FILTER) {
+  player_ids_list = [];
+  const players = await axios.get(
+    `https://soccer.sportmonks.com/api/v2.0/players/search/${PLAYER_NAME}`,
+    {
+      params: {
+        include: "team.league",
+        api_token: process.env.api_token,
+      },
+    }
+  );
+
+
+    for (let i=0; i<players.data.data.length; i++)
+    {
+      try 
+      {
+        if (players.data.data[i].team.data.league.data.id == 271)
+        {
+          if (FILTER == -1) //no filter
+          {
+            player_ids_list.push(players.data.data[i].player_id)
+          }
+          else if (FILTER == players.data.data[i].position_id)
+          {
+            player_ids_list.push(players.data.data[i].player_id)
+          }
+          else if (FILTER == players.data.data[i].team.data.name)
+          {
+            player_ids_list.push(players.data.data[i].player_id)
+          }
+          
+        }
+      } catch (error) {
+        continue;
+      }
+
+    }
+
+    let relevant_players = await Promise.all(player_ids_list);
+
+    players_details = [];
+    for (let i=0; i< relevant_players.length; i++)
+    {
+        const player_info = await get_preview_details(relevant_players[i]);
+        players_details.push(player_info);
+    }
+
+
+  return players_details;
+    
+}
+
+
+
+
 exports.getPlayersByTeam = getPlayersByTeam;
 exports.getPlayersInfo = getPlayersInfo;
 exports.get_preview_details = get_preview_details;
 exports.get_extra_details = get_extra_details;
+exports.get_player_info_by_name = get_player_info_by_name;
+// exports.get_homePage_by_player_name = get_homePage_by_player_name;
