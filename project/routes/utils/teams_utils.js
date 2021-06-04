@@ -30,6 +30,7 @@ async function getTeamDetails(teamID) {
     );
   
     return {
+      team_id: team.data.data.id,
       team_name: team.data.data.name,
       team_logo: team.data.data.logo_path
     };

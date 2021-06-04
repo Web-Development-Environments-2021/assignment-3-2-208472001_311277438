@@ -26,6 +26,9 @@ router.post("/Register", async (req, res, next) => {
     await DButils.execQuery(
       `INSERT INTO dbo.users (username, password, email, firstname, lastname, country, img) VALUES ('${req.body.username}', '${hash_password}','${req.body.email}', '${req.body.firstname}','${req.body.lastname}','${req.body.country}','${req.body.imageUrl}')`
     );
+
+    req.session.lastSearch = null;
+
     res.status(201).send("user created");
   } catch (error) {
     next(error);
@@ -39,8 +42,6 @@ router.post("/Login", async (req, res, next) => {
         `SELECT * FROM dbo.users WHERE username = '${req.body.username}'`
       )
     )[0];
-    // user = user[0];
-    console.log(user.username);
 
     // check that username exists & the password is correct
     if (!user || !bcrypt.compareSync(req.body.password, user.password)) {
@@ -49,6 +50,7 @@ router.post("/Login", async (req, res, next) => {
 
     // Set cookie
     req.session.user_id = user.user_id;
+    req.session.lastSearch = null;
 
     // return cookie
     res.status(200).send("login succeeded");
