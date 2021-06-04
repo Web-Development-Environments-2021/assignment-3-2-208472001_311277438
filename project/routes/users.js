@@ -29,6 +29,7 @@ router.use(async function (req, res, next) {
 router.post("/favoritePlayers", async (req, res, next) => {
   try {
     const user_id = req.session.user_id;
+    console.log(user_id);
     const player_id = req.body.playerId;
     console.log("----------------------------------");
     console.log(user_id);
