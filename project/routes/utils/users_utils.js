@@ -35,6 +35,20 @@ async function getFavorite(table, user_id) {
   return ids;
 }
 
+async function getFavoritegameDetails(gameID){
+  const game = await DButils.execQuery(
+    `select gamedate, gametime, hometeamID, awayteamID, field from dbo.games where gameID=${gameID}`
+  );
+  const events = await DButils.execQuery(
+    `select * from dbo.events where gameID=${gameID}`
+  );
 
+  return {
+    gamedetails: game,
+    eventsdetails: events
+  };
+}
+
+exports.getFavoritegameDetails = getFavoritegameDetails;
 exports.markAsFavorite = markAsFavorite;
 exports.getFavorite = getFavorite;

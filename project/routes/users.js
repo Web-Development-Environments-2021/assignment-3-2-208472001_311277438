@@ -51,13 +51,12 @@ router.get("/favoritePlayers", async (req, res, next) => {
     let favorite_players = [];
     const player_ids = await users_utils.getFavorite("Player", user_id);
     for (let i = 0; i < player_ids.length; i++){
-      console.log(player_ids[i].PlayerID);
-      const preview_details = await players_utils.get_preview_details(player_ids[i].playerid);
+      const preview_details = await players_utils.get_preview_details(player_ids[i].PlayerID);
       favorite_players.push(preview_details);
     }
     res.status(200).send(favorite_players);
   } catch (error) {
-    next(error);
+    res.status(400).send("There is no player with this id inputs");
   }
 });
 
@@ -87,12 +86,12 @@ router.get("/favoriteTeams", async (req, res, next) => {
     let favorite_teams = [];
     const team_ids = await users_utils.getFavorite("Team", user_id);
     for (let i = 0; i < team_ids.length; i++){
-      const extra_details = await teams_utils.getTeamDetails(team_ids[i].teamid);
+      const extra_details = await teams_utils.get_team_info(team_ids[i].TeamID);
       favorite_teams.push(extra_details);
     }
     res.status(200).send(favorite_teams);
   } catch (error) {
-    next(error);
+    res.status(400).send("There is no team with this id inputs");
   }
 });
 
@@ -119,7 +118,7 @@ router.get("/favoriteGames", async (req, res, next) => {
     let favorite_games = [];
     const games_ids = await users_utils.getFavorite("Game", user_id);
     for (let i = 0; i < games_ids.length; i++){
-      const extra_details = await users_utils.getFavoritegameDetails(games_ids[i].gameid);
+      const extra_details = await users_utils.getFavoritegameDetails(games_ids[i].GameID);
       favorite_games.push(extra_details);
     }
     res.status(200).send(favorite_games);
