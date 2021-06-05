@@ -2,6 +2,7 @@ var express = require("express");
 var router = express.Router();
 const teams_utils = require("./utils/teams_utils");
 const players_utils = require("./utils/players_utils");
+const coaches_utils = require("./utils/coaches_utils");
 let teamID;
 
 function extend(target) {
@@ -16,15 +17,15 @@ function extend(target) {
 
 router.get("/teamFullDetails/:teamId", async (req, res, next) => {
   teamID = req.params.teamId;
-  team_details = [];
   try {
+    
     const team_players_details = await players_utils.getPlayersByTeam(teamID);
+    const team_coach = await coaches_utils.getCoachByTeam(teamID);
     const team_games_details = await teams_utils.getTeamDetails(teamID);
 
-    let full_details = extend({}, team_games_details, team_players_details);
-    team_details.push(full_details);
+    let full_details = extend({}, team_players_details, team_coach, team_games_details);
 
-    res.status(200).send(team_details);
+    res.status(200).send(full_details);
     
   
   } catch (error) {

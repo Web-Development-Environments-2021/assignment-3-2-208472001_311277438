@@ -150,7 +150,7 @@ async function get_player_info_by_name(PLAYER_NAME, FILTER) {
     {
       try 
       {
-        if (players.data.data[i].team.data.league.data.id == 271)
+        if (players.data.data[i].team.data.league.data.id === 271)
         {
           if (FILTER == -1) //no filter
           {

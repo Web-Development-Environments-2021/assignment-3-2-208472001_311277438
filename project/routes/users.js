@@ -145,11 +145,25 @@ router.get("/searchByName/:Name", async (req, res, next) => {
   let NAME = req.params.Name;
   let details = [];
   try {
-      const player_info = await players_utils.get_player_info_by_name(NAME, -1);
-      const team_info = await teams_utils.get_team_info_by_name(NAME);
-      const coach_info = await coaches_utils.get_coach_info_by_name(NAME, -1)
+      let player_info = await players_utils.get_player_info_by_name(NAME, -1);
+      if (player_info.length == 0)
+      {
+        player_info = ["Sorry! There are no players with this name in this league"];
+      }
       details.push(player_info);
+
+      let team_info = await teams_utils.get_team_info_by_name(NAME);
+      if (team_info.length == 0)
+      {
+        team_info = ["Sorry! There are no teams with this name in this league"];
+      }
       details.push(team_info);
+
+      let coach_info = await coaches_utils.get_coach_info_by_name(NAME, -1)
+      if (coach_info.length == 0)
+      {
+        coach_info = ["Sorry! There are no coaches with this name in this league"];
+      }
       details.push(coach_info);
 
       req.session.lastSearch = {
@@ -170,19 +184,19 @@ router.get("/searchByNameFilterWithPositionId/:Name/:positionId", async (req, re
   let NAME = req.params.Name;
   let details = [];
   try {
-      const player_info = await players_utils.get_player_info_by_name(NAME, positionID);
-      const team_info = await teams_utils.get_team_info_by_name(NAME);
-      const coach_info = await coaches_utils.get_coach_info_by_name(NAME, -1)
+      let player_info = await players_utils.get_player_info_by_name(NAME, positionID);
+      if (player_info.length == 0)
+      {
+        player_info = ["Sorry! There are no players with this name and position in this league"];
+      }
       details.push(player_info);
-      details.push(team_info);
-      details.push(coach_info);
 
       req.session.lastSearch = {
         query: `/searchByNameFilterWithPositionId/${NAME}/${positionID}`,
         result: details
       }
 
-      res.send(details);
+      res.status(200).send(details);
   } catch (error) {
     next(error);
   }
@@ -193,11 +207,18 @@ router.get("/searchByNameFilterWithTeamName/:Name/:teamName", async (req, res, n
   let NAME = req.params.Name;
   let details = [];
   try {
-      const player_info = await players_utils.get_player_info_by_name(NAME, teamNAME);
-      const team_info = await teams_utils.get_team_info_by_name(NAME);
-      const coach_info = await coaches_utils.get_coach_info_by_name(NAME, teamNAME)
+      let player_info = await players_utils.get_player_info_by_name(NAME, teamNAME);
+      if (player_info.length == 0)
+      {
+        player_info = ["Sorry! There are no players with this name and team in this league"];
+      }
       details.push(player_info);
-      details.push(team_info);
+
+      let coach_info = await coaches_utils.get_coach_info_by_name(NAME, teamNAME)
+      if (coach_info.length == 0)
+      {
+        coach_info = ["Sorry! There are no coaches with this name and team in this league"];
+      }
       details.push(coach_info);
 
       req.session.lastSearch = {
@@ -205,7 +226,7 @@ router.get("/searchByNameFilterWithTeamName/:Name/:teamName", async (req, res, n
         result: details
       }
 
-      res.send(details);
+      res.status(200).send(details);
   } catch (error) {
     next(error);
   }

@@ -14,15 +14,13 @@ function extend(target) {
 }
 
 router.get("/homePage/:coachId", async (req, res, next) => {
-  let coach_details = [];
   coachID = req.params.coachId;
   try {
     const preview_details = await coaches_utils.get_preview_details(coachID);
     const extra_details = await coaches_utils.get_extra_details(coachID);
     let full_details = extend({}, preview_details, extra_details);
-    coach_details.push(full_details);
 
-    res.send(coach_details);
+    res.send(full_details);
   } catch (error) {
     next(error);
   }

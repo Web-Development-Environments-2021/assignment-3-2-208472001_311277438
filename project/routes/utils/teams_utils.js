@@ -7,9 +7,9 @@ async function getTeamGames(teamID) {
     // team_details.push(players_details);
       
     const past_home_team_games = await DButils.execQuery(`SELECT * FROM dbo.games WHERE hometeamID = ${teamID} AND homeGoal IS NOT NULL`);
-    const past_away_team_games = await DButils.execQuery(`SELECT * FROM dbo.games WHERE awayteamID = ${teamID} AND homeGoal IS NOT NULL`);
+    const past_away_team_games = await DButils.execQuery(`SELECT * FROM dbo.games WHERE awayteamID = ${teamID} AND awayGoal IS NOT NULL`);
     const future_home_team_games = await DButils.execQuery(`SELECT * FROM dbo.games WHERE hometeamID = ${teamID} AND homeGoal IS NULL`);
-    const future_away_team_games = await DButils.execQuery(`SELECT * FROM dbo.games WHERE awayteamID = ${teamID} AND homeGoal IS NULL`);
+    const future_away_team_games = await DButils.execQuery(`SELECT * FROM dbo.games WHERE awayteamID = ${teamID} AND awayGoal IS NULL`);
     team_details.push(past_home_team_games);
     team_details.push(past_away_team_games);
     team_details.push(future_home_team_games);

@@ -1,5 +1,22 @@
 const axios = require("axios");
-const CURRENT_SEASON_ID = 17328;
+var express = require("express");
+var router = express.Router();
+const CURRENT_LEAGUE = 271;
+let CURRENT_SEASON_ID;
+
+
+router.use(async function () {
+  const league = await axios.get(
+    `  https://soccer.sportmonks.com/api/v2.0/leagues/${CURRENT_LEAGUE}`,
+    {
+      params: {
+        include: "season",
+        api_token: process.env.api_token,
+      },
+    }
+  );
+  CURRENT_SEASON_ID = league.data.data.current_season_id;
+});
 
 async function get_preview_details(COACH_ID) {
   const coach = await axios.get(
@@ -43,6 +60,23 @@ async function get_extra_details(COACH_ID) {
     nationality: coach.data.data.nationality,
     birthdate: coach.data.data.birthdate,
     birthcountry: coach.data.data.birthcountry,
+  };
+}
+
+async function getCoachByTeam(TEAM_ID) {
+  const team = await axios.get(
+    `https://soccer.sportmonks.com/api/v2.0/teams/${TEAM_ID}`,
+    {
+      params: {
+        include: "coach",
+        api_token: process.env.api_token,
+      },
+    }
+  );
+
+  return {
+    coach_name: team.data.data.coach.data.fullname,
+    coach_id: team.data.data.coach.data.coach_id
   };
 }
 
@@ -98,3 +132,4 @@ async function get_coach_info_by_name(coachNAME, FILTER) {
 exports.get_preview_details = get_preview_details;
 exports.get_extra_details = get_extra_details;
 exports.get_coach_info_by_name = get_coach_info_by_name;
+exports.getCoachByTeam = getCoachByTeam;
