@@ -132,10 +132,14 @@ paths:
                   type: int
                   description: game id which the user saved
                   example: 56
-                score:
-                  type: string
-                  description: game id which the user saved
-                  example: 2-1
+                homegoal:
+                  type: int
+                  description: home goal
+                  example: 2
+                awaygoal:
+                  type: int
+                  description: away goal
+                  example: 1
       responses:
         '200':
           description: A new score has been added to game
@@ -169,7 +173,7 @@ paths:
             schema:
               type: object
               properties:
-                gameId:
+                playerId:
                   type: int
                   description: player's id which the user saved
                   example: 85
@@ -243,8 +247,8 @@ paths:
             schema:
               type: object
               properties:
-                teamsId:
-                  type: string
+                teamId:
+                  type: int
                   description: teams's id which the user saved
                   example: 123
       responses:
@@ -569,14 +573,10 @@ components:
       type: object
       description: Contains data on new game
       properties:
-        gameID:
-          type: integer
-          example: 231
-          description: the id of the game
         gamedate:
           type: string
-          example: 26-12-2015
-          descriptio/n: the date of the game
+          example: '2022-12-12'
+          description: the date of the game
         gametime:
           type: string
           example: '15:45:20'
@@ -593,10 +593,10 @@ components:
           type: string
           example: Bloomfield
           description: field
-        score:
+        referee:
           type: string
-          example: 1-1
-          description: score
+          example: aaa
+          description: referee
 
     eventslog:
       type: object
@@ -604,24 +604,16 @@ components:
       properties:
         gameID:
           type: integer
-          example: 231
+          example: 1
           description: the id of the game
-        eventdate:
-          type: string
-          example: 3-4-2020
-          description: date
-        eventtime:
-          type: string
-          example: 19:30:20
-          description: time
         eventminute:
           type: integer
           example: 10
           description: the minute of the game
         dataevent:
           type: string
-          example: 10
-          description: goal
+          example: goal
+          description: event
         playerID:
           type: integer
           example: 145

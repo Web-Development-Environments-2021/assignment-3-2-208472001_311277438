@@ -32,7 +32,10 @@ router.post("/favoritePlayers", async (req, res, next) => {
   try {
     const user_id = req.session.user_id;
     const player_id = req.body.playerId;
-    await users_utils.markAsFavorite("Players",user_id, player_id);
+    if (isNaN(player_id)){
+      throw { status: 400, message: "incorrect inputs" };
+  }
+    await users_utils.markAsFavorite("Player",user_id, player_id);
     res.status(201).send("The player successfully saved as favorite");
   } catch (error) {
     next(error);
@@ -48,6 +51,7 @@ router.get("/favoritePlayers", async (req, res, next) => {
     let favorite_players = [];
     const player_ids = await users_utils.getFavorite("Player", user_id);
     for (let i = 0; i < player_ids.length; i++){
+      console.log(player_ids[i].PlayerID);
       const preview_details = await players_utils.get_preview_details(player_ids[i].playerid);
       favorite_players.push(preview_details);
     }
@@ -63,8 +67,11 @@ router.get("/favoritePlayers", async (req, res, next) => {
 router.post("/favoriteTeams", async (req, res, next) => {
   try {
     const user_id = req.session.user_id;
-    const team_id = req.body.teamsId;
-    await users_utils.markAsFavorite("Teams",user_id, team_id);
+    const team_id = req.body.teamId;
+    if (isNaN(team_id)){
+      throw { status: 400, message: "incorrect inputs" };
+  }
+    await users_utils.markAsFavorite("Team",user_id, team_id);
     res.status(201).send("The team successfully saved as favorite");
   } catch (error) {
     next(error);
@@ -93,7 +100,10 @@ router.post("/favoriteGames", async (req, res, next) => {
   try {
     const user_id = req.session.user_id;
     const game_id = req.body.gameId;
-    await users_utils.markAsFavorite("Games",user_id, game_id);
+    if (isNaN(game_id)){
+      throw { status: 400, message: "incorrect inputs" };
+  }
+    await users_utils.markAsFavorite("Game",user_id, game_id);
     res.status(201).send("The game successfully saved as favorite");
   } catch (error) {
     next(error);
