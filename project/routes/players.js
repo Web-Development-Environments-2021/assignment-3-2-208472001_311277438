@@ -28,4 +28,5 @@ router.get("/homePage/:playerId", async (req, res, next) => {
   }
 });
 
+
 module.exports = router;
