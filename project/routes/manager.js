@@ -57,7 +57,7 @@ router.put("/addScore", async (req, res, next) => {
                 throw { status: 400, message: "incorrect inputs" };
             }
             const match = await DButils.execQuery(
-                `SELECT homegoal FROM dbo.games WHERE gameID = '${gameid}'`
+                `SELECT homegoal FROM dbo.games WHERE gameID = ${gameid}`
             );
 
             if (typeof match[0] === 'undefined'){
