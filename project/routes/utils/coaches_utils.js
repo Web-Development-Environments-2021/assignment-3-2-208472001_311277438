@@ -2,10 +2,9 @@ const axios = require("axios");
 var express = require("express");
 var router = express.Router();
 const CURRENT_LEAGUE = 271;
-let CURRENT_SEASON_ID;
 
 
-router.use(async function () {
+async function get_current_season() {
   const league = await axios.get(
     `  https://soccer.sportmonks.com/api/v2.0/leagues/${CURRENT_LEAGUE}`,
     {
@@ -15,8 +14,9 @@ router.use(async function () {
       },
     }
   );
-  CURRENT_SEASON_ID = league.data.data.current_season_id;
-});
+  let CURRENT_SEASON_ID = league.data.data.current_season_id;
+  return CURRENT_SEASON_ID;
+}
 
 async function get_preview_details(COACH_ID) {
   const coach = await axios.get(
@@ -81,6 +81,7 @@ async function getCoachByTeam(TEAM_ID) {
 }
 
 async function get_coach_info_by_name(coachNAME, FILTER) {
+    let CURRENT_SEASON_ID = get_current_season();
     const teams = await axios.get(
       `https://soccer.sportmonks.com/api/v2.0/teams/season/${CURRENT_SEASON_ID}`,
       {
@@ -133,3 +134,4 @@ exports.get_preview_details = get_preview_details;
 exports.get_extra_details = get_extra_details;
 exports.get_coach_info_by_name = get_coach_info_by_name;
 exports.getCoachByTeam = getCoachByTeam;
+exports.get_current_season = get_current_season;
