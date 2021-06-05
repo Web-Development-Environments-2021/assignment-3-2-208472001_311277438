@@ -70,7 +70,7 @@ router.post("/addEvent", async (req, res, next) => {
         else {
             const user_id = req.session.user_id;
             await DButils.execQuery(
-                `INSERT INTO dbo.events (gameID, eventdate, eventtime, eventminute, dataevent, playerID) VALUES ('${req.body.gameID}', '${req.body.eventdate}','${req.body.eventtime}', '${req.body.eventminute}','${req.body.dataevent}','${req.body.field}','${req.body.playerID}')`
+                `INSERT INTO dbo.events (gameID, eventminute, dataevent, playerID) VALUES ('${req.body.gameID}', '${req.body.eventdate}','${req.body.eventtime}', '${req.body.eventminute}','${req.body.dataevent}','${req.body.field}','${req.body.playerID}')`
             );
             res.status(201).send("event has been added");
         }
