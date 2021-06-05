@@ -21,6 +21,7 @@ async function get_preview_details(COACH_ID) {
   );
 
   return {
+    coach_id: coach.data.data.coach_id,
     full_name: coach.data.data.fullname,
     team_name: coach_team.data.data.name,
     image: coach.data.data.image_path,
