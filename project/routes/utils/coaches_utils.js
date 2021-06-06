@@ -88,7 +88,7 @@ async function getCoachByTeam(TEAM_ID) {
   };
 }
 
-async function get_coach_info_by_name(coachNAME, FILTER) {
+async function get_all_coaches() {
   let teams;
   try {
     let CURRENT_SEASON_ID = await get_current_season();
@@ -115,11 +115,16 @@ async function get_coach_info_by_name(coachNAME, FILTER) {
       } catch (error) {
         continue;
       }
-  
     }
   
-    let coaches = await Promise.all(coaches_ids_list);
-  
+    return await Promise.all(coaches_ids_list);
+}
+
+
+async function get_coach_info_by_name(coachNAME, FILTER) {
+
+    let coaches = await get_all_coaches();
+
     coaches_details = [];
     for (let i=0; i< coaches.length; i++)
     {
@@ -139,7 +144,6 @@ async function get_coach_info_by_name(coachNAME, FILTER) {
   
     }
   
-  
   return coaches_details;
   
   }
@@ -149,3 +153,4 @@ exports.get_extra_details = get_extra_details;
 exports.get_coach_info_by_name = get_coach_info_by_name;
 exports.getCoachByTeam = getCoachByTeam;
 exports.get_current_season = get_current_season;
+exports.get_all_coaches = get_all_coaches;
