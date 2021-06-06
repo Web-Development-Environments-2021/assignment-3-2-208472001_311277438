@@ -211,8 +211,6 @@ async function get_player_info_by_name(PLAYER_NAME, FILTER) {
 }
 
 
-
-
 exports.getPlayersByTeam = getPlayersByTeam;
 exports.getPlayersInfo = getPlayersInfo;
 exports.get_preview_details = get_preview_details;
