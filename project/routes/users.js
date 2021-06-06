@@ -143,28 +143,30 @@ router.get("/lastSearch", async (req, res, next) => {
 
 router.get("/searchByName/:Name", async (req, res, next) => {
   let NAME = req.params.Name;
-  let details = [];
   try {
       let player_info = await players_utils.get_player_info_by_name(NAME, -1);
       if (player_info.length == 0)
       {
-        player_info = ["Sorry! There are no players with this name in this league"];
+        player_info = "Sorry! There are no players with this name in this league";
       }
-      details.push(player_info);
 
       let team_info = await teams_utils.get_team_info_by_name(NAME);
       if (team_info.length == 0)
       {
-        team_info = ["Sorry! There are no teams with this name in this league"];
+        team_info = "Sorry! There are no teams with this name in this league";
       }
-      details.push(team_info);
 
       let coach_info = await coaches_utils.get_coach_info_by_name(NAME, -1)
       if (coach_info.length == 0)
       {
-        coach_info = ["Sorry! There are no coaches with this name in this league"];
+        coach_info = "Sorry! There are no coaches with this name in this league";
       }
-      details.push(coach_info);
+
+      let details = {
+        players: player_info,
+        teams: team_info,
+        coaches: coach_info
+      };
 
       req.session.lastSearch = {
         query: `/searchByName/${NAME}`,
@@ -182,21 +184,19 @@ router.get("/searchByName/:Name", async (req, res, next) => {
 router.get("/searchByNameFilterWithPositionId/:Name/:positionId", async (req, res, next) => {
   let positionID = req.params.positionId;
   let NAME = req.params.Name;
-  let details = [];
   try {
       let player_info = await players_utils.get_player_info_by_name(NAME, positionID);
       if (player_info.length == 0)
       {
-        player_info = ["Sorry! There are no players with this name and position in this league"];
+        player_info = "Sorry! There are no players with this name and position in this league";
       }
-      details.push(player_info);
 
       req.session.lastSearch = {
         query: `/searchByNameFilterWithPositionId/${NAME}/${positionID}`,
-        result: details
+        result: player_info
       }
 
-      res.status(200).send(details);
+      res.status(200).send(player_info);
   } catch (error) {
     next(error);
   }
@@ -205,21 +205,23 @@ router.get("/searchByNameFilterWithPositionId/:Name/:positionId", async (req, re
 router.get("/searchByNameFilterWithTeamName/:Name/:teamName", async (req, res, next) => {
   let teamNAME = req.params.teamName;
   let NAME = req.params.Name;
-  let details = [];
   try {
       let player_info = await players_utils.get_player_info_by_name(NAME, teamNAME);
       if (player_info.length == 0)
       {
-        player_info = ["Sorry! There are no players with this name and team in this league"];
+        player_info = "Sorry! There are no players with this name and team in this league";
       }
-      details.push(player_info);
 
       let coach_info = await coaches_utils.get_coach_info_by_name(NAME, teamNAME)
       if (coach_info.length == 0)
       {
-        coach_info = ["Sorry! There are no coaches with this name and team in this league"];
+        coach_info = "Sorry! There are no coaches with this name and team in this league";
       }
-      details.push(coach_info);
+
+      let details = {
+        players: player_info,
+        coaches: coach_info,
+      };
 
       req.session.lastSearch = {
         query: `/searchByNameFilterWithTeamName/${NAME}/${teamNAME}`,
@@ -231,8 +233,6 @@ router.get("/searchByNameFilterWithTeamName/:Name/:teamName", async (req, res, n
     next(error);
   }
 });
-
-
 
 module.exports = router;
 

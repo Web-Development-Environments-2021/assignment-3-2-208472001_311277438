@@ -1,7 +1,9 @@
 var express = require("express");
 var router = express.Router();
+const axios = require("axios");
 const DButils = require("./utils/DButils");
 const players_utils = require("./utils/players_utils");
+const coaches_utils = require("./utils/coaches_utils");
 
 function extend(target) {
     var sources = [].slice.call(arguments, 1);

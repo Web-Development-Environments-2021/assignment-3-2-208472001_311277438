@@ -50,21 +50,34 @@ function extractRelevantPlayerData(players_info) {
 
 
 async function getPlayersByTeam(team_id) {
-  let player_ids_list = await getPlayerIdsByTeam(team_id);
-  let players_info = await getPlayersInfo(player_ids_list);
+  let player_ids_list;
+  let players_info;
+  try {
+    player_ids_list = await getPlayerIdsByTeam(team_id);
+    players_info = await getPlayersInfo(player_ids_list);
+  } catch (error) {
+    return [];
+  }
+
   return players_info;
 }
 
 async function get_preview_details(PLAYER_ID) {
-  const player = await axios.get(
-    `https://soccer.sportmonks.com/api/v2.0/players/${PLAYER_ID}`,
-    {
-      params: {
-        include: "team",
-        api_token: process.env.api_token,
-      },
-    }
-  );
+  let player;
+  try {
+    player = await axios.get(
+      `https://soccer.sportmonks.com/api/v2.0/players/${PLAYER_ID}`,
+      {
+        params: {
+          include: "team",
+          api_token: process.env.api_token,
+        },
+      }
+    );
+  } catch (error) {
+    return [];
+  }
+
 
   return {
     player_id: player.data.data.player_id,
@@ -76,15 +89,20 @@ async function get_preview_details(PLAYER_ID) {
 }
 
 async function get_extra_details(PLAYER_ID) {
-  const player = await axios.get(
-    `https://soccer.sportmonks.com/api/v2.0/players/${PLAYER_ID}`,
-    {
-      params: {
-        include: "team",
-        api_token: process.env.api_token,
-      },
-    }
-  );
+  let player;
+  try {
+    player = await axios.get(
+      `https://soccer.sportmonks.com/api/v2.0/players/${PLAYER_ID}`,
+      {
+        params: {
+          include: "team",
+          api_token: process.env.api_token,
+        },
+      }
+    );
+  } catch (error) {
+    return [];
+  }
 
   return {
     common_name: player.data.data.common_name,
@@ -135,16 +153,22 @@ async function get_extra_details(PLAYER_ID) {
 
 async function get_player_info_by_name(PLAYER_NAME, FILTER) {
   player_ids_list = [];
-  const players = await axios.get(
-    `https://soccer.sportmonks.com/api/v2.0/players/search/${PLAYER_NAME}`,
-    {
-      params: {
-        include: "team.league",
-        api_token: process.env.api_token,
-      },
-    }
-  );
-
+  let players;
+  try {
+    players = await axios.get(
+      `https://soccer.sportmonks.com/api/v2.0/players/search/${PLAYER_NAME}`,
+      {
+        params: {
+          include: "team.league",
+          api_token: process.env.api_token,
+        },
+      }
+    );
+  } catch (error)
+  {
+    //there is no player with this name
+    return [];
+  }
 
     for (let i=0; i<players.data.data.length; i++)
     {

@@ -2,33 +2,44 @@ const axios = require("axios");
 const DButils = require("./DButils");
 
 async function getTeamGames(teamID) {
-    let team_details = [];
-    // const players_details = await players_utils.getPlayersByTeam(teamID);
-    // team_details.push(players_details);
-      
-    const past_home_team_games = await DButils.execQuery(`SELECT * FROM dbo.games WHERE hometeamID = ${teamID} AND homeGoal IS NOT NULL`);
-    const past_away_team_games = await DButils.execQuery(`SELECT * FROM dbo.games WHERE awayteamID = ${teamID} AND awayGoal IS NOT NULL`);
-    const future_home_team_games = await DButils.execQuery(`SELECT * FROM dbo.games WHERE hometeamID = ${teamID} AND homeGoal IS NULL`);
-    const future_away_team_games = await DButils.execQuery(`SELECT * FROM dbo.games WHERE awayteamID = ${teamID} AND awayGoal IS NULL`);
-    team_details.push(past_home_team_games);
-    team_details.push(past_away_team_games);
-    team_details.push(future_home_team_games);
-    team_details.push(future_away_team_games);
-  
-    return team_details;
 
+    let past_home_team_games = await DButils.execQuery(`SELECT * FROM dbo.games WHERE hometeamID = ${teamID} AND homeGoal IS NOT NULL`);
+    let past_away_team_games = await DButils.execQuery(`SELECT * FROM dbo.games WHERE awayteamID = ${teamID} AND awayGoal IS NOT NULL`);
+    let past_games = past_home_team_games.concat(past_away_team_games);
+    if (past_games.length == 0)
+    {
+      past_games = "There are no past games for this team yet";
+    }
+    let future_home_team_games = await DButils.execQuery(`SELECT * FROM dbo.games WHERE hometeamID = ${teamID} AND homeGoal IS NULL`);
+    let future_away_team_games = await DButils.execQuery(`SELECT * FROM dbo.games WHERE awayteamID = ${teamID} AND awayGoal IS NULL`);
+    let future_games = future_home_team_games.concat(future_away_team_games);
+    if (future_games.length == 0)
+    {
+      future_games = "There are no future games for this team yet";
+    }
+
+    return {
+      past_team_games: past_games,
+      future_team_games: future_games
+    };
   }
 
   async function get_team_info(teamID) {
-    const team = await axios.get(
-      `https://soccer.sportmonks.com/api/v2.0/teams/${teamID}`,
-      {
-        params: {
-          api_token: process.env.api_token,
-        },
-      }
-    );
-  
+    let team;
+    try {
+      const team = await axios.get(
+        `https://soccer.sportmonks.com/api/v2.0/teams/${teamID}`,
+        {
+          params: {
+            api_token: process.env.api_token,
+          },
+        }
+      );
+    
+    } catch (error) {
+      return [];
+    }
+
     return {
       team_id: team.data.data.id,
       team_name: team.data.data.name,
@@ -38,15 +49,22 @@ async function getTeamGames(teamID) {
   }
 
   async function get_team_info_by_name(TEAM_NAME) {
-    const teams = await axios.get(
-      `https://soccer.sportmonks.com/api/v2.0/teams/search/${TEAM_NAME}`,
-      {
-        params: {
-          include: "league",
-          api_token: process.env.api_token,
-        },
-      }
-    );
+    let teams;
+    try {
+      teams = await axios.get(
+        `https://soccer.sportmonks.com/api/v2.0/teams/search/${TEAM_NAME}`,
+        {
+          params: {
+            include: "league",
+            api_token: process.env.api_token,
+          },
+        }
+      );
+    } catch (error) {
+      //there is no team with this name
+      return [];
+    }
+
 
     teams_ids_list = [];
     for (let i=0; i<teams.data.data.length; i++)

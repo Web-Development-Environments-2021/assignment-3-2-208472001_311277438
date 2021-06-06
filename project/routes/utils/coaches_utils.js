@@ -1,6 +1,4 @@
 const axios = require("axios");
-var express = require("express");
-var router = express.Router();
 const CURRENT_LEAGUE = 271;
 
 
@@ -14,28 +12,33 @@ async function get_current_season() {
       },
     }
   );
-  let CURRENT_SEASON_ID = league.data.data.current_season_id;
-  return CURRENT_SEASON_ID;
+  return league.data.data.current_season_id;
 }
 
 async function get_preview_details(COACH_ID) {
-  const coach = await axios.get(
-    `https://soccer.sportmonks.com/api/v2.0/coaches/${COACH_ID}`,
-    {
-      params: {
-        api_token: process.env.api_token,
-      },
-    }
-  );
+  let coach;
+  let coach_team;
+  try {
+    coach = await axios.get(
+      `https://soccer.sportmonks.com/api/v2.0/coaches/${COACH_ID}`,
+      {
+        params: {
+          api_token: process.env.api_token,
+        },
+      }
+    );
 
-  const coach_team = await axios.get(
-    `https://soccer.sportmonks.com/api/v2.0/teams/${coach.data.data.team_id}`,
-    {
-      params: {
-        api_token: process.env.api_token,
-      },
-    }
-  );
+    coach_team = await axios.get(
+      `https://soccer.sportmonks.com/api/v2.0/teams/${coach.data.data.team_id}`,
+      {
+        params: {
+          api_token: process.env.api_token,
+        },
+      }
+    );
+  } catch (error) {
+    return [];
+  }
 
   return {
     coach_id: coach.data.data.coach_id,
@@ -64,15 +67,20 @@ async function get_extra_details(COACH_ID) {
 }
 
 async function getCoachByTeam(TEAM_ID) {
-  const team = await axios.get(
-    `https://soccer.sportmonks.com/api/v2.0/teams/${TEAM_ID}`,
-    {
-      params: {
-        include: "coach",
-        api_token: process.env.api_token,
-      },
-    }
-  );
+  let team;
+  try {
+    team = await axios.get(
+      `https://soccer.sportmonks.com/api/v2.0/teams/${TEAM_ID}`,
+      {
+        params: {
+          include: "coach",
+          api_token: process.env.api_token,
+        },
+      }
+    );
+  } catch (error) {
+    return [];
+  }
 
   return {
     coach_name: team.data.data.coach.data.fullname,
@@ -81,8 +89,10 @@ async function getCoachByTeam(TEAM_ID) {
 }
 
 async function get_coach_info_by_name(coachNAME, FILTER) {
-    let CURRENT_SEASON_ID = get_current_season();
-    const teams = await axios.get(
+  let teams;
+  try {
+    let CURRENT_SEASON_ID = await get_current_season();
+    teams = await axios.get(
       `https://soccer.sportmonks.com/api/v2.0/teams/season/${CURRENT_SEASON_ID}`,
       {
         params: {
@@ -91,6 +101,10 @@ async function get_coach_info_by_name(coachNAME, FILTER) {
         },
       }
     );
+  } catch (error) {
+    //there are no coaches in this season
+    return [];
+  }
   
     coaches_ids_list = [];
     for (let i=0; i<teams.data.data.length; i++)
