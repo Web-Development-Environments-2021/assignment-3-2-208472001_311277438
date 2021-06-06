@@ -132,9 +132,11 @@ async function get_coach_info_by_name(coachNAME, FILTER) {
     let coaches = await get_all_coaches();
 
     coaches_details = [];
+    let counter = 0;
+
     for (let i=0; i< coaches.length; i++)
     {
-      if (i == 20){
+      if (counter == 20){
         break;
       }
         const coach_info = await get_preview_details(coaches[i]);
@@ -143,10 +145,12 @@ async function get_coach_info_by_name(coachNAME, FILTER) {
             if (FILTER == -1)
             {
                 coaches_details.push(coach_info);
+                counter+=1;
             }
             else if (FILTER == coach_info.team_name)
             {
                 coaches_details.push(coach_info);
+                counter+=1;
             }
 
         }

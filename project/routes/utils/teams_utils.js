@@ -65,11 +65,12 @@ async function getTeamGames(teamID) {
       return [];
     }
 
-
     teams_ids_list = [];
+    let counter = 0;
+
     for (let i=0; i<teams.data.data.length; i++)
     {
-      if (i == 20){
+      if (counter == 20) {
         break;
       }
       try 
@@ -77,6 +78,7 @@ async function getTeamGames(teamID) {
         if (teams.data.data[i].league.data.id == 271)
         {
           teams_ids_list.push(teams.data.data[i].id)
+          counter+=1;
         }
       } catch (error) {
         continue;

@@ -174,9 +174,11 @@ async function get_player_info_by_name(PLAYER_NAME, FILTER) {
     return [];
   }
 
+    let counter = 0;
+
     for (let i=0; i<players.data.data.length; i++)
     {
-      if (i == 20){
+      if (counter == 20) {
         break;
       }
       try 
@@ -186,14 +188,17 @@ async function get_player_info_by_name(PLAYER_NAME, FILTER) {
           if (FILTER == -1) //no filter
           {
             player_ids_list.push(players.data.data[i].player_id)
+            counter+=1;
           }
           else if (FILTER == players.data.data[i].position_id)
           {
             player_ids_list.push(players.data.data[i].player_id)
+            counter+=1;
           }
           else if (FILTER == players.data.data[i].team.data.name)
           {
             player_ids_list.push(players.data.data[i].player_id)
+            counter+=1;
           }
           
         }
