@@ -250,7 +250,7 @@ paths:
                 teamId:
                   type: int
                   description: teams's id which the user saved
-                  example: 123
+                  example: 939
       responses:
         "201":
           description: The game successfully saved as favorite
@@ -481,15 +481,15 @@ components:
             description: time
           hometeamID:
             type: integer
-            example: 123
+            example: 85
             description: time
           awayteamID:
             type: integer
-            example: 456
+            example: 86
             description: time
           field:
             type: string
-            example: bloomfield
+            example: Parken
             description: time
           score:
             type: string
@@ -540,15 +540,15 @@ components:
             description: time
           hometeamID:
             type: integer
-            example: 123
+            example: 85
             description: time
           awayteamID:
             type: integer
-            example: 456
+            example: 86
             description: time
           field:
             type: string
-            example: bloomfield
+            example: Parken
             description: time
 
     coachdata:
@@ -583,19 +583,19 @@ components:
           description: the time of the game
         hometeamID:
           type: integer
-          example: 123
+          example: 85
           description: id of home team
         awayteamID:
           type: integer
-          example: 456
+          example: 86
           description: id of away team
         field:
           type: string
-          example: Bloomfield
+          example: Parken
           description: field
         referee:
           type: string
-          example: aaa
+          example: Andrew Dallas
           description: referee
 
     eventslog:

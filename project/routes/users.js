@@ -86,10 +86,17 @@ router.get("/favoriteTeams", async (req, res, next) => {
     let favorite_teams = [];
     const team_ids = await users_utils.getFavorite("Team", user_id);
     for (let i = 0; i < team_ids.length; i++){
-      const extra_details = await teams_utils.get_team_info(team_ids[i].TeamID);
-      favorite_teams.push(extra_details);
+      const team_details = await teams_utils.get_team_info(team_ids[i].TeamID);
+      if (team_details.length != 0) {
+        favorite_teams.push(team_details);
+      }
     }
-    res.status(200).send(favorite_teams);
+    if(favorite_teams.length != 0)
+    {
+      res.status(200).send(favorite_teams);
+    } else {
+      res.status(200).send("There are no teams in favorites");
+    }
   } catch (error) {
     res.status(400).send("There is no team with this id inputs");
   }

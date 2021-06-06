@@ -27,14 +27,19 @@ async function getTeamGames(teamID) {
   async function get_team_info(teamID) {
     let team;
     try {
-      const team = await axios.get(
+      team = await axios.get(
         `https://soccer.sportmonks.com/api/v2.0/teams/${teamID}`,
         {
           params: {
+            include: "league",
             api_token: process.env.api_token,
           },
         }
       );
+
+      if (team.data.data.league.data.id != 271) {
+        return [];
+      }
     
     } catch (error) {
       return [];
