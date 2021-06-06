@@ -26,7 +26,7 @@ async function markAsFavorite(table, user_id, id) {
   await DButils.execQuery(
     `insert into dbo.favorite${table}s values ('${user_id}','${id}')`
   );
-  return "The game successfully saved as favorite";
+  return "The " + table + " successfully saved as favorite";
 }
 
 async function getFavorite(table, user_id) {

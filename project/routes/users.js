@@ -35,8 +35,14 @@ router.post("/favoritePlayers", async (req, res, next) => {
     if (isNaN(player_id)){
       throw { status: 400, message: "incorrect inputs" };
   }
-    await users_utils.markAsFavorite("Player",user_id, player_id);
-    res.status(201).send("The player successfully saved as favorite");
+
+  const player_details = await players_utils.get_preview_details(player_id);
+    if (player_details.length != 0){
+      const ans = await users_utils.markAsFavorite("Player",user_id, player_id);
+      res.status(201).send(ans);
+    } else{
+      res.status(201).send("There is no player with this id in the league");
+    }
   } catch (error) {
     next(error);
   }
@@ -54,10 +60,16 @@ router.get("/favoritePlayers", async (req, res, next) => {
       const preview_details = await players_utils.get_preview_details(player_ids[i].PlayerID);
       favorite_players.push(preview_details);
     }
-    res.status(200).send(favorite_players);
-  } catch (error) {
-    res.status(400).send("There is no player with this id inputs");
+    if(favorite_players.length != 0)
+    {
+      res.status(200).send(favorite_players);
+    } else {
+      res.status(200).send("There are no players in favorites");
+    } 
   }
+    catch (error) {
+      res.status(400).send("There is no team with this id inputs");
+    }
 });
 
 /**
@@ -70,8 +82,14 @@ router.post("/favoriteTeams", async (req, res, next) => {
     if (isNaN(team_id)){
       throw { status: 400, message: "incorrect inputs" };
   }
-    await users_utils.markAsFavorite("Team",user_id, team_id);
-    res.status(201).send("The team successfully saved as favorite");
+    const team_details = await teams_utils.get_team_info(team_id);
+    if (team_details.length != 0){
+      const ans = await users_utils.markAsFavorite("Team",user_id, team_id);
+      res.status(201).send(ans);
+    } else{
+      res.status(201).send("There is no Team with this id in the league");
+    }
+    
   } catch (error) {
     next(error);
   }

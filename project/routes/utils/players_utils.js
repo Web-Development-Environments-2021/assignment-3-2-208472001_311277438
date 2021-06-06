@@ -73,11 +73,14 @@ async function get_preview_details(PLAYER_ID) {
       `https://soccer.sportmonks.com/api/v2.0/players/${PLAYER_ID}`,
       {
         params: {
-          include: "team",
+          include: "team.league",
           api_token: process.env.api_token,
         },
       }
     );
+    if (player.data.data.team.data.league.data.id != 271){
+      return [];
+    }
   } catch (error) {
     return [];
   }

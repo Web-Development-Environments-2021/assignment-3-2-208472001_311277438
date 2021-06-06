@@ -31,10 +31,26 @@ router.post("/addGame", async (req, res, next) => {
                 throw { status: 400, message: "incorrect inputs" };
             }
 
-            await DButils.execQuery(
-                `INSERT INTO dbo.games (gamedate, gametime, hometeamID, awayteamID, field, homegoal, awaygoal, referee, stage) VALUES ('${req.body.gamedate}','${req.body.gametime}', '${req.body.hometeamID}','${req.body.awayteamID}','${req.body.field}', NULL, NULL, '${req.body.referee}', 'Championship Round')`
+            const fieldgame = await DButils.execQuery(
+                `SELECT name FROM dbo.stadiums WHERE name = '${req.body.field}'`
             );
-            res.status(201).send("game has been added");
+
+            const refereegame = await DButils.execQuery(
+                `SELECT name FROM dbo.referees WHERE name = '${req.body.referee}'`
+            );
+
+            if (fieldgame.length == 0 ){
+                res.status(201).send("There is no stadium with this name");
+            }
+            else if (refereegame.length == 0){
+                res.status(201).send("There is no referee with this name");
+            }
+            else{
+                await DButils.execQuery(
+                    `INSERT INTO dbo.games (gamedate, gametime, hometeamID, awayteamID, field, homegoal, awaygoal, referee, stage) VALUES ('${req.body.gamedate}','${req.body.gametime}', '${req.body.hometeamID}','${req.body.awayteamID}','${req.body.field}', NULL, NULL, '${req.body.referee}', 'Championship Round')`
+                );
+                res.status(201).send("game has been added");
+            }
         }
     } catch (error) {
         next(error);
