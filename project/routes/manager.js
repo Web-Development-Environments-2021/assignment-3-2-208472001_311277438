@@ -39,18 +39,48 @@ router.post("/addGame", async (req, res, next) => {
                 `SELECT name FROM dbo.referees WHERE name = '${req.body.referee}'`
             );
 
-            if (fieldgame.length == 0 ){
+            let dateReg = /^\d{4}[./-]\d{2}[./-]\d{2}$/;
+            let isdatevalid = dateReg.test(req.body.gamedate);
+            
+            if(!isdatevalid){
+                res.status(201).send("The date is not valid");
+            }
+            else if (fieldgame.length == 0 ){
                 res.status(201).send("There is no stadium with this name");
             }
             else if (refereegame.length == 0){
                 res.status(201).send("There is no referee with this name");
             }
+
+            
+
+            // else if((req.body.gamedate).match(dateReg))
             else{
-                await DButils.execQuery(
-                    `INSERT INTO dbo.games (gamedate, gametime, hometeamID, awayteamID, field, homegoal, awaygoal, referee, stage) VALUES ('${req.body.gamedate}','${req.body.gametime}', '${req.body.hometeamID}','${req.body.awayteamID}','${req.body.field}', NULL, NULL, '${req.body.referee}', 'Championship Round')`
-                );
-                res.status(201).send("game has been added");
+                
+                let flag = true;
+                const games = await DButils.execQuery(
+                    `SELECT gamedate, hometeamID, awayteamID, referee, field FROM dbo.games`
+                );       
+
+                for(let i = 0 ; i< games.length; i++){
+                    if(String(games[i].gamedate) == req.body.gamedate){
+                        if (games[i].hometeamID == req.body.hometeamID || games[i].hometeamID == req.body.awayteamID || games[i].awayteamID == req.body.hometeamID || games[i].awayteamID == req.body.awayteamID || games[i].referee == req.body.referee || games[i].field == req.body.field){
+                            flag = false;
+                        }
+                    }
+                }
+
+                if(flag){
+                    await DButils.execQuery(
+                        `INSERT INTO dbo.games (gamedate, gametime, hometeamID, awayteamID, field, homegoal, awaygoal, referee, stage) VALUES ('${req.body.gamedate}','${req.body.gametime}', '${req.body.hometeamID}','${req.body.awayteamID}','${req.body.field}', NULL, NULL, '${req.body.referee}', 'Championship Round')`
+                    );
+                    res.status(201).send("game has been added");
+                }
+                else{
+                    res.status(201).send("game cant be add");
+                }
             }
+     
         }
     } catch (error) {
         next(error);

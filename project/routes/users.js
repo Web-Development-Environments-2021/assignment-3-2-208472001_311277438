@@ -87,7 +87,7 @@ router.post("/favoriteTeams", async (req, res, next) => {
       const ans = await users_utils.markAsFavorite("Team",user_id, team_id);
       res.status(201).send(ans);
     } else{
-      res.status(201).send("There is no Team with this id in the league");
+      res.status(400).send("There is no Team with this id in the league");
     }
     
   } catch (error) {
@@ -150,7 +150,7 @@ router.get("/favoriteGames", async (req, res, next) => {
       res.status(200).send(favorite_games);
     }
     else{
-      res.status(200).send("There are no games in favorites");
+      res.status(400).send("There are no games in favorites");
     }  
     } catch (error) {
     next(error);
