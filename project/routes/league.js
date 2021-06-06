@@ -33,7 +33,7 @@ router.get("/futuregames", async (req, res, next) => {
   try {
 
     const future_games = await DButils.execQuery(
-      `select gameid, gametimedate, gametime, hometeamID, awayteamID, field from dbo.games where score is null`
+      `select gameid, gametimedate, gametime, hometeamID, awayteamID, field from dbo.games where homegoal is null`
     );
 
     res.status(200).send(future_games);
