@@ -102,8 +102,8 @@ router.post("/favoriteGames", async (req, res, next) => {
     if (isNaN(game_id)){
       throw { status: 400, message: "incorrect inputs" };
   }
-    await users_utils.markAsFavorite("Game",user_id, game_id);
-    res.status(201).send("The game successfully saved as favorite");
+    const ans = await users_utils.markAsFavorite("Game",user_id, game_id);
+    res.status(201).send(ans);
   } catch (error) {
     next(error);
   }
@@ -118,11 +118,16 @@ router.get("/favoriteGames", async (req, res, next) => {
     let favorite_games = [];
     const games_ids = await users_utils.getFavorite("Game", user_id);
     for (let i = 0; i < games_ids.length; i++){
-      const extra_details = await users_utils.getFavoritegameDetails(games_ids[i].GameID);
-      favorite_games.push(extra_details);
+      const game_details = await users_utils.getFavoritegameDetails(games_ids[i].GameID);
+      favorite_games.push(game_details);
     }
-    res.status(200).send(favorite_games);
-  } catch (error) {
+    if (favorite_games.length != 0){
+      res.status(200).send(favorite_games);
+    }
+    else{
+      res.status(200).send("There are no games in favorites");
+    }  
+    } catch (error) {
     next(error);
   }
 });

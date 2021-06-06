@@ -69,6 +69,9 @@ async function getTeamGames(teamID) {
     teams_ids_list = [];
     for (let i=0; i<teams.data.data.length; i++)
     {
+      if (i == 20){
+        break;
+      }
       try 
       {
         if (teams.data.data[i].league.data.id == 271)

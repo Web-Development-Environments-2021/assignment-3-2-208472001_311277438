@@ -2,7 +2,7 @@ var express = require("express");
 var router = express.Router();
 const DButils = require("../routes/utils/DButils");
 const bcrypt = require("bcryptjs");
-
+let CURRENT_USERNAME = "";
 
 
 router.post("/Register", async (req, res, next) => {
@@ -38,7 +38,12 @@ router.post("/Register", async (req, res, next) => {
 });
 
 router.post("/Login", async (req, res, next) => {
+  
   try {
+    if (CURRENT_USERNAME == req.body.username){
+      throw { status: 401, message: "Username already login" };
+    }
+
     const user = (
       await DButils.execQuery(
         `SELECT * FROM dbo.users WHERE username = '${req.body.username}'`
@@ -54,6 +59,8 @@ router.post("/Login", async (req, res, next) => {
     req.session.user_id = user.user_id;
     req.session.lastSearch = null;
 
+    CURRENT_USERNAME = req.body.username;
+    
     // return cookie
     res.status(200).send("login succeeded");
   } catch (error) {

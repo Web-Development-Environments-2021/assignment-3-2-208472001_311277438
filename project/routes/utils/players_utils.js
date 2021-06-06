@@ -3,17 +3,19 @@ let api_domain = 'https://soccer.sportmonks.com/api/v2.0';
 
 async function getPlayerIdsByTeam(team_id) {
   let player_ids_list = [];
+  
   const team = await axios.get(`${api_domain}/teams/${team_id}`, {
     params: {
-      include: "squad",
+      include: "squad, league",
       api_token: process.env.api_token,
     },
   });
   
-  team.data.data.squad.data.map((player) =>
-    player_ids_list.push(player.player_id)
+  if (team.data.data.league.data.id == 271){
+    team.data.data.squad.data.map((player) =>
+    player_ids_list.push(player.player_id) 
   );
-  
+  }
   return player_ids_list;
 }
 
@@ -50,12 +52,14 @@ function extractRelevantPlayerData(players_info) {
 
 
 async function getPlayersByTeam(team_id) {
-  let player_ids_list;
-  let players_info;
+  let player_ids_list = [];
+  let players_info = [];
   try {
     player_ids_list = await getPlayerIdsByTeam(team_id);
-    players_info = await getPlayersInfo(player_ids_list);
-  } catch (error) {
+    if (player_ids_list.length != 0){
+      players_info = await getPlayersInfo(player_ids_list);
+    }
+    } catch (error) {
     return [];
   }
 
@@ -172,6 +176,9 @@ async function get_player_info_by_name(PLAYER_NAME, FILTER) {
 
     for (let i=0; i<players.data.data.length; i++)
     {
+      if (i == 20){
+        break;
+      }
       try 
       {
         if (players.data.data[i].team.data.league.data.id === 271)

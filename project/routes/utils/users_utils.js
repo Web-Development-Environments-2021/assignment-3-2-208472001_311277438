@@ -8,10 +8,10 @@ async function markAsFavorite(table, user_id, id) {
     );
 
     if (typeof row[0] === 'undefined'){
-      throw { status: 201, message: `there is no ${table} with this id` };
+       return `There is no ${table} with this id`;
     }
-    if (typeof row[0].homegoal != null){
-      throw { status: 201, message: `there game already played` };
+    if (row[0].homegoal != null){
+      return `This game already played`;
     }
   }
 
@@ -20,12 +20,13 @@ async function markAsFavorite(table, user_id, id) {
   );
 
   if (typeof index[0] != 'undefined'){
-    throw { status: 201, message: `the ${table} already in user ${user_id} favorites` };
+    return `The ${table} already in user ${user_id} favorites`;
   }
   
   await DButils.execQuery(
     `insert into dbo.favorite${table}s values ('${user_id}','${id}')`
   );
+  return "The game successfully saved as favorite";
 }
 
 async function getFavorite(table, user_id) {
@@ -37,15 +38,15 @@ async function getFavorite(table, user_id) {
 
 async function getFavoritegameDetails(gameID){
   const game = await DButils.execQuery(
-    `select gamedate, gametime, hometeamID, awayteamID, field from dbo.games where gameID=${gameID}`
+    `select top 3 gamedate, gametime, hometeamID, awayteamID, field from dbo.games where gameID=${gameID}`
   );
-  const events = await DButils.execQuery(
-    `select * from dbo.events where gameID=${gameID}`
-  );
+  // const events = await DButils.execQuery(
+  //   `select * from dbo.events where gameID=${gameID}`
+  // );
 
   return {
     gamedetails: game,
-    eventsdetails: events
+    // eventsdetails: events
   };
 }
 

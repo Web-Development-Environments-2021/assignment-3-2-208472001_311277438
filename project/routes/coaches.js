@@ -13,14 +13,19 @@ function extend(target) {
     return target;
 }
 
-router.get("/homePage/:coachId", async (req, res, next) => {
+router.get("/coachDetails/:coachId", async (req, res, next) => {
   coachID = req.params.coachId;
   try {
     const preview_details = await coaches_utils.get_preview_details(coachID);
     const extra_details = await coaches_utils.get_extra_details(coachID);
     let full_details = extend({}, preview_details, extra_details);
-
-    res.send(full_details);
+    if (preview_details.length != 0){
+      res.status(200).send(full_details);
+    }
+    else{
+      res.status(200).send("There is no coach with this id")
+    }
+    
   } catch (error) {
     next(error);
   }

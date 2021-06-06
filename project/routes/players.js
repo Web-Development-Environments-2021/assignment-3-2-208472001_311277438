@@ -15,14 +15,18 @@ function extend(target) {
     return target;
 }
 
-router.get("/homePage/:playerId", async (req, res, next) => {
+router.get("/playerDetails/:playerId", async (req, res, next) => {
   let playerID = req.params.playerId;
   try {
     const preview_details = await players_utils.get_preview_details(playerID);
     const extra_details = await players_utils.get_extra_details(playerID);
     let full_details = extend({}, preview_details, extra_details);
-
-    res.send(full_details);
+    if (preview_details.length != 0){
+      res.status(200).send(full_details);
+    }
+    else{
+      res.status(200).send("There is no player with this id")
+    }
   } catch (error) {
     next(error);
   }

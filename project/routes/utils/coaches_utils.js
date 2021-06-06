@@ -49,14 +49,20 @@ async function get_preview_details(COACH_ID) {
 }
 
 async function get_extra_details(COACH_ID) {
-  const coach = await axios.get(
-    `https://soccer.sportmonks.com/api/v2.0/coaches/${COACH_ID}`,
-    {
-      params: {
-        api_token: process.env.api_token,
-      },
+  let coach;
+  try{
+    coach = await axios.get(
+      `https://soccer.sportmonks.com/api/v2.0/coaches/${COACH_ID}`,
+      {
+        params: {
+          api_token: process.env.api_token,
+        },
+      }
+    );
+    
+    }catch (error) {
+      return [];
     }
-  );
 
   return {
     common_name: coach.data.data.common_name,
@@ -128,6 +134,9 @@ async function get_coach_info_by_name(coachNAME, FILTER) {
     coaches_details = [];
     for (let i=0; i< coaches.length; i++)
     {
+      if (i == 20){
+        break;
+      }
         const coach_info = await get_preview_details(coaches[i]);
         if (String(coach_info.full_name).toLowerCase().includes(coachNAME.toLowerCase()))
         {
