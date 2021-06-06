@@ -16,14 +16,18 @@ router.get("/getDetails", async (req, res, next) => {
 router.get("/pastgames", async (req, res, next) => {
   try {
     const past_games = await DButils.execQuery(
-      `select * from dbo.games where score is not null`
+      `select * from dbo.games where homeGoal is not null`
     );
 
     const game_events = await DButils.execQuery(
       `select * from dbo.events`
     );
 
-    res.status(200).send([past_games, game_events]);
+    let details = {
+      past_games: past_games,
+      game_events: game_events
+    }
+    res.status(200).send(details);
   } catch (error) {
     next(error);
   }
@@ -33,7 +37,7 @@ router.get("/futuregames", async (req, res, next) => {
   try {
 
     const future_games = await DButils.execQuery(
-      `select gameid, gametimedate, gametime, hometeamID, awayteamID, field from dbo.games where homegoal is null`
+      `select * from dbo.games where homeGoal is null`
     );
 
     res.status(200).send(future_games);

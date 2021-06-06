@@ -56,6 +56,11 @@ router.put("/addScore", async (req, res, next) => {
             if (isNaN(gameid) || isNaN(homegoal) || isNaN(awaygoal)){
                 throw { status: 400, message: "incorrect inputs" };
             }
+
+            if (homegoal < 0 || awaygoal < 0) {
+                throw { status: 400, message: "score can't be low than zero" };
+            }
+
             const match = await DButils.execQuery(
                 `SELECT homegoal FROM dbo.games WHERE gameID = ${gameid}`
             );
@@ -92,6 +97,10 @@ router.post("/addEvent", async (req, res, next) => {
         }
         else {
             if (isNaN(req.body.gameID) || isNaN(req.body.eventminute) || isNaN(req.body.playerID) || typeof req.body.dataevent != 'string'){
+                throw { status: 400, message: "incorrect inputs" };
+            }
+
+            if (req.body.eventminute < 0 || req.body.eventminute > 130) {
                 throw { status: 400, message: "incorrect inputs" };
             }
             const game = await DButils.execQuery(
