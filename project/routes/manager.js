@@ -136,7 +136,6 @@ router.put("/addScore", async (req, res, next) => {
 
 router.post("/addEvent", async (req, res, next) => {
     try {
-        
         const user_id = req.session.user_id;
         if (user_id != 2) {
             res.status(403).send("The user doesnt have access to add game")
@@ -152,6 +151,7 @@ router.post("/addEvent", async (req, res, next) => {
             const game = await DButils.execQuery(
                 `SELECT homegoal FROM dbo.games WHERE gameID = '${req.body.gameID}'`
             );
+            console.log()
 
             if (typeof game[0] === 'undefined'){
                 res.status(201).send("there is no gameID");

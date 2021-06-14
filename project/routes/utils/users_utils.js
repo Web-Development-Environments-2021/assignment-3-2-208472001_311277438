@@ -38,7 +38,7 @@ async function getFavorite(table, user_id) {
 
 async function getFavoritegameDetails(gameID){
   const game = await DButils.execQuery(
-    `select top 3 gamedate, gametime, hometeamID, awayteamID, field from dbo.games where gameID=${gameID}`
+    `select top 3 gameid, gamedate, gametime, hometeamID, awayteamID, field from dbo.games where gameID=${gameID}`
   );
   // const events = await DButils.execQuery(
   //   `select * from dbo.events where gameID=${gameID}`

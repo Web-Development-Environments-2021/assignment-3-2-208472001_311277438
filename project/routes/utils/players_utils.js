@@ -27,6 +27,7 @@ async function getPlayersInfo(players_ids_list) {
         params: {
           api_token: process.env.api_token,
           include: "team",
+          
         },
       })
     )
