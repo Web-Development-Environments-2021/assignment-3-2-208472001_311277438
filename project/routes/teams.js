@@ -7,7 +7,7 @@ const coaches_utils = require("./utils/coaches_utils");
 
 router.get("/teamDetails/:teamId", async (req, res, next) => {
   let teamID = req.params.teamId;
-  // let team_details = [];
+  console.log(teamID);
   try {
     
     let team_players = await players_utils.getPlayersByTeam(teamID);

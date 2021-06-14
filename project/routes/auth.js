@@ -40,9 +40,9 @@ router.post("/Register", async (req, res, next) => {
 router.post("/Login", async (req, res, next) => {
   
   try {
-    if (CURRENT_USERNAME == req.body.username){
-      throw { status: 401, message: "Username already login" };
-    }
+    // if (CURRENT_USERNAME == req.body.username){
+    //   throw { status: 401, message: "Username already login" };
+    // }
 
     const user = (
       await DButils.execQuery(
