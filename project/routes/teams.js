@@ -7,7 +7,6 @@ const coaches_utils = require("./utils/coaches_utils");
 
 router.get("/teamDetails/:teamId", async (req, res, next) => {
   let teamID = req.params.teamId;
-  console.log(teamID);
   try {
     
     let team_players = await players_utils.getPlayersByTeam(teamID);
@@ -36,5 +35,14 @@ router.get("/teamDetails/:teamId", async (req, res, next) => {
   }
 });
 
+router.get("/teamName/:teamId", async (req, res, next) => {
+  let teamID = req.params.teamId;
+  try {
+    let name = await teams_utils.getNameByTeamID(teamID);
+    res.status(200).send(name[0].name);
+  } catch (error){
+    next(error);
+  }
+});
 
 module.exports = router;

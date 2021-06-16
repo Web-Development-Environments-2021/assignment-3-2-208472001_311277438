@@ -50,6 +50,25 @@ async function getFavoritegameDetails(gameID){
   };
 }
 
+async function deletefromfavorites(table, id){
+  const mount = await DButils.execQuery(
+    `select count(*) as num from dbo.favorite${table}s`
+  );
+
+  await DButils.execQuery(
+    `delete from dbo.favorite${table}s where gameid=${id}`
+  );
+
+  const mount2 = await DButils.execQuery(
+    `select count(*) as num from dbo.favorite${table}s`
+  );
+  
+  if(mount2 - mount != 0)
+    return "Succeeded";
+  return "fail";
+}
+
+exports.deletefromfavorites = deletefromfavorites;
 exports.getFavoritegameDetails = getFavoritegameDetails;
 exports.markAsFavorite = markAsFavorite;
 exports.getFavorite = getFavorite;

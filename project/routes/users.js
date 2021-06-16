@@ -134,6 +134,21 @@ router.post("/favoriteGames", async (req, res, next) => {
   }
 });
 
+
+router.delete("/favoriteGames", async (req, res, next) => {
+  try {
+    const user_id = req.session.user_id;
+    const game_id = req.body.gameId;
+    if (isNaN(game_id)){
+      throw { status: 400, message: "incorrect inputs" };
+  }
+    const ans = await users_utils.deletefromfavorites("Game", game_id);
+    res.status(201).send(ans);
+  } catch (error) {
+    next(error);
+  }
+});
+
 /**
  * This path returns the favorites teams that were saved by the logged-in user
  */
