@@ -88,10 +88,7 @@ async function getCoachByTeam(TEAM_ID) {
     return [];
   }
 
-  return {
-    coach_name: team.data.data.coach.data.fullname,
-    coach_id: team.data.data.coach.data.coach_id
-  };
+  return await get_preview_details(team.data.data.coach.data.coach_id);
 }
 
 async function get_all_coaches() {

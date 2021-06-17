@@ -23,7 +23,7 @@ router.get("/coachDetails/:coachId", async (req, res, next) => {
       res.status(200).send(full_details);
     }
     else{
-      res.status(200).send("There is no coach with this id")
+      res.status(400).send("There is no coach with this id")
     }
     
   } catch (error) {
