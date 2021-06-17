@@ -12,9 +12,10 @@ router.get("/teamDetails/:teamId", async (req, res, next) => {
     let team_players = await players_utils.getPlayersByTeam(teamID);
     if (team_players.length == 0)
     {
-      res.status(200).send("This team is not exist in that league");
+      res.status(400).send("This team is not exist in that league");
     }
-    else{
+    else {
+    
       let team_coach = await coaches_utils.getCoachByTeam(teamID);
       if (team_coach.length == 0)
       {
@@ -27,8 +28,8 @@ router.get("/teamDetails/:teamId", async (req, res, next) => {
         coach: team_coach,
         games: team_games
       }
-      
-      res.status(200).send(team_details);
+    
+    res.status(200).send(team_details);
     }
   } catch (error) {
     next(error);
