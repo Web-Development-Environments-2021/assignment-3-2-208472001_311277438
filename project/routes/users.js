@@ -39,9 +39,12 @@ router.post("/favoritePlayers", async (req, res, next) => {
   const player_details = await players_utils.get_preview_details(player_id);
     if (player_details.length != 0){
       const ans = await users_utils.markAsFavorite("Player",user_id, player_id);
-      res.status(201).send(ans);
-    } else{
-      res.status(201).send("There is no player with this id in the league");
+      if(ans == 0){
+        res.status(400).send("There was a problem to add that player to favorites");
+      }
+      else{
+        res.status(201).send("The player successfully saved as favorite");
+      }
     }
   } catch (error) {
     next(error);
@@ -85,9 +88,12 @@ router.post("/favoriteTeams", async (req, res, next) => {
     const team_details = await teams_utils.get_team_info(team_id);
     if (team_details.length != 0){
       const ans = await users_utils.markAsFavorite("Team",user_id, team_id);
-      res.status(201).send(ans);
-    } else{
-      res.status(400).send("There is no Team with this id in the league");
+      if(ans == 0){
+        res.status(400).send("There was a problem to add that team to favorites");
+      }
+      else{
+        res.status(201).send("The team successfully saved as favorite");
+      }
     }
     
   } catch (error) {
@@ -128,7 +134,12 @@ router.post("/favoriteGames", async (req, res, next) => {
       throw { status: 400, message: "incorrect inputs" };
   }
     const ans = await users_utils.markAsFavorite("Game",user_id, game_id);
-    res.status(201).send(ans);
+    if(ans == 0){
+      res.status(400).send("There was a problem to add that game to favorites");
+    }
+    else{
+      res.status(201).send("The game successfully saved as favorite");
+    }
   } catch (error) {
     next(error);
   }

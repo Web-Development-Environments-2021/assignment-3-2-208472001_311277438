@@ -8,10 +8,12 @@ async function markAsFavorite(table, user_id, id) {
     );
 
     if (typeof row[0] === 'undefined'){
-       return `There is no ${table} with this id`;
+      //  return `There is no ${table} with this id`;
+      return 0;
     }
     if (row[0].homegoal != null){
-      return `This game already played`;
+      // return `This game already played`;
+      return 0;
     }
   }
 
@@ -20,13 +22,15 @@ async function markAsFavorite(table, user_id, id) {
   );
 
   if (typeof index[0] != 'undefined'){
-    return `The ${table} already in user ${user_id} favorites`;
+    // return `The ${table} already in user ${user_id} favorites`;
+    return 0
   }
   
   await DButils.execQuery(
     `insert into dbo.favorite${table}s values ('${user_id}','${id}')`
   );
-  return "The " + table + " successfully saved as favorite";
+  // return "The " + table + " successfully saved as favorite";
+  return 1;
 }
 
 async function getFavorite(table, user_id) {
