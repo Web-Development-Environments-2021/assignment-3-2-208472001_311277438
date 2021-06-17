@@ -248,6 +248,20 @@ paths:
                   type: int
                   description: player's id which the user saved
                   example: 82808
+    delete:
+      summary: player game in the favorites list of a user
+      tags:
+        - Users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                gameId:
+                  type: int
+                  description: player's id which the user deleted
+                  example: 82808
       responses:
         "201":
           description: The player successfully saved as favorite
@@ -290,6 +304,26 @@ paths:
           description: The game successfully saved as favorite
         "400":
           description: incorrect inputs
+    delete:
+      summary: delete game in the favorites list of a user
+      tags:
+        - Users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                gameId:
+                  type: int
+                  description: game's id which the user deleted
+                  example: 14009
+
+      responses:
+        "201":
+          description: successfull
+        "400":
+          description: incorrect inputs
 
   /users/favoriteTeams:
     get:
@@ -328,6 +362,20 @@ paths:
           description: The team successfully saved as favorite
         "400":
           description: incorrect inputs
+    delete:
+      summary: delete team in the favorites list of a user
+      tags:
+        - Users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                gameId:
+                  type: int
+                  description: team's id which the user deleted
+                  example: 939
 
   /users/searchByName/{Name}:
     get:
@@ -432,6 +480,22 @@ paths:
                 $ref: "#/components/schemas/teamDetails"
         "404":
           description: teamId is not exists
+  
+  /teams/teamName/{teamID}:
+    get:
+      summary: return the teams name
+      tags:
+        - Teams
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                teamID:
+                  type: string
+                  description: teams name
+                  example: Hapoel
 
   /league/pastgames:
     get:
@@ -515,14 +579,14 @@ components:
           minLength: 3
           maxLength: 8
           description: username conatins letters only
-          example: ladygaga
+          example: amit
         password:
           type: string
           minLength: 5
           maxLength: 10
           format: password
           description: password conatins at least one number and one special char
-          example: lady@56
+          example: amit
 
     League:
       type: object
@@ -687,6 +751,11 @@ components:
           type: string
           description: coach's birthcountry
           example: Denmark
+    
+    teamIDdetail:
+      type: object
+
+      name: integer
 
     teamDetails:
       type: object

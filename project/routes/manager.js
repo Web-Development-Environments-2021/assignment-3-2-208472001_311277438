@@ -151,7 +151,7 @@ router.post("/addEvent", async (req, res, next) => {
             const game = await DButils.execQuery(
                 `SELECT homegoal FROM dbo.games WHERE gameID = '${req.body.gameID}'`
             );
-            console.log()
+       
 
             if (typeof game[0] === 'undefined'){
                 res.status(201).send("there is no gameID");

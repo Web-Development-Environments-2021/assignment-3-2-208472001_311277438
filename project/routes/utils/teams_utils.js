@@ -104,7 +104,15 @@ async function getTeamGames(teamID) {
   return teams_details;
   
   }
+  async function getNameByTeamID(teamID) {
 
+    const name = await DButils.execQuery(
+      `SELECT name from dbo.teams WHERE teamID = '${teamID}'`
+  );
+  return name;
+}
+
+  exports.getNameByTeamID = getNameByTeamID;
   exports.getTeamGames = getTeamGames;
   exports.get_team_info = get_team_info;
   exports.get_team_info_by_name = get_team_info_by_name;
