@@ -67,7 +67,7 @@ async function deletefromfavorites(table, id){
     `select count(*) as num from dbo.favorite${table}s`
   );
   
-  if(mount2 - mount != 0)
+  if(mount2[0].num - mount[0].num != 0)
     return "Succeeded";
   return "fail";
 }
