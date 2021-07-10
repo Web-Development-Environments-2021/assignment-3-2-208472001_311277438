@@ -248,20 +248,6 @@ paths:
                   type: int
                   description: player's id which the user saved
                   example: 82808
-    delete:
-      summary: player game in the favorites list of a user
-      tags:
-        - Users
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                gameId:
-                  type: int
-                  description: player's id which the user deleted
-                  example: 82808
       responses:
         "201":
           description: The player successfully saved as favorite
@@ -304,26 +290,6 @@ paths:
           description: The game successfully saved as favorite
         "400":
           description: incorrect inputs
-    delete:
-      summary: delete game in the favorites list of a user
-      tags:
-        - Users
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                gameId:
-                  type: int
-                  description: game's id which the user deleted
-                  example: 14009
-
-      responses:
-        "201":
-          description: successfull
-        "400":
-          description: incorrect inputs
 
   /users/favoriteTeams:
     get:
@@ -362,8 +328,10 @@ paths:
           description: The team successfully saved as favorite
         "400":
           description: incorrect inputs
+    
+  /users/favorites/{table}/{id}:
     delete:
-      summary: delete team in the favorites list of a user
+      summary: delete game in the favorites list of a user
       tags:
         - Users
       requestBody:
@@ -372,10 +340,14 @@ paths:
             schema:
               type: object
               properties:
-                gameId:
+                table:
+                  type: string
+                  description: table name which the user delete from
+                  example: game
+                id:
                   type: int
-                  description: team's id which the user deleted
-                  example: 939
+                  description: game's id which the user deleted
+                  example: 14009
 
   /users/searchByName/{Name}:
     get:
@@ -481,7 +453,7 @@ paths:
         "404":
           description: teamId is not exists
   
-  /teams/teamName/{teamID}:
+  /teams//teamLeague/{teamId}:
     get:
       summary: return the teams name
       tags:
@@ -492,10 +464,29 @@ paths:
             schema:
               type: object
               properties:
-                teamID:
+                name:
                   type: string
                   description: teams name
                   example: Hapoel
+                league:
+                  type: string
+                  description: boolean
+                  example: true
+
+  /league/getEvents/{gameid}:
+    get:
+      tags:
+        - league
+      summary: Return the game events
+      parameters:
+      responses:
+        "200":
+          description: data about the game events returned
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: "#/components/schemas/eventslog"
 
   /league/pastgames:
     get:
