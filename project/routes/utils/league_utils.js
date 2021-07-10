@@ -61,9 +61,13 @@ async function getEvents(gameid){
   return events;
 }
 
-
+async function getStadiums(){
+  const stadiums = await DButils.execQuery(`select * from dbo.stadiums`);
+  return stadiums;
+}
 
 exports.getEvents = getEvents;
 exports.get_current_season = get_current_season;
 exports.getLeagueDetails = getLeagueDetails;
+exports.getStadiums = getStadiums;
 

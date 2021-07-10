@@ -69,5 +69,15 @@ router.get("/allgames", async (req, res, next) => {
     next(error);
   }
 });
+
+router.get("/getStadiums", async (req, res, next) => {
+  try {
+    const getStadiums = await league_utils.getStadiums();
+    res.status(200).send(getStadiums);
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = router;
 

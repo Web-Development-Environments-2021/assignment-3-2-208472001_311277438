@@ -134,4 +134,4 @@ async function getTeamLeague(teamID){
   exports.get_team_info = get_team_info;
   exports.get_team_info_by_name = get_team_info_by_name;
   exports.getNameByTeamID = getNameByTeamID;
-
+  exports.getTeamLeague = getTeamLeague;
