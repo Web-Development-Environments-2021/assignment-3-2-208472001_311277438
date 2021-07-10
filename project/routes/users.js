@@ -135,7 +135,7 @@ router.post("/favoriteGames", async (req, res, next) => {
   }
     const ans = await users_utils.markAsFavorite("Game",user_id, game_id);
     if(ans == 0){
-      res.status(400).send("There was a problem to add that game to favorites");
+      res.status(200).send("The game is already in your favrites");
     }
     else{
       res.status(201).send("The game successfully saved as favorite");
@@ -145,20 +145,22 @@ router.post("/favoriteGames", async (req, res, next) => {
   }
 });
 
-
-router.delete("/favoriteGames", async (req, res, next) => {
+router.delete("/favorites/:table/:id", async (req, res, next) => {
   try {
     const user_id = req.session.user_id;
-    const game_id = req.body.gameId;
-    if (isNaN(game_id)){
+    let id = req.params.id;
+    let table = req.params.table;
+    
+    if (isNaN(id)){
       throw { status: 400, message: "incorrect inputs" };
   }
-    const ans = await users_utils.deletefromfavorites("Game", game_id);
+    const ans = await users_utils.deletefromfavorites(table, id);
     res.status(201).send(ans);
   } catch (error) {
     next(error);
   }
 });
+
 
 /**
  * This path returns the favorites teams that were saved by the logged-in user
@@ -186,7 +188,7 @@ router.get("/favoriteGames", async (req, res, next) => {
 router.get("/lastSearch", async (req, res, next) => {
   try {
     if (req.session.lastSearch == null) {
-      res.status(200).send("You have not searched for anything yet!");
+      res.status(200).send(null);
     }
     else {
       res.status(200).send(req.session.lastSearch);
@@ -201,32 +203,41 @@ router.get("/searchByName/:Name", async (req, res, next) => {
   let NAME = req.params.Name;
   try {
       let player_info = await players_utils.get_player_info_by_name(NAME, -1);
-      if (player_info.length == 0)
-      {
-        player_info = "Sorry! There are no players with this name in this league";
-      }
-
-      let team_info = await teams_utils.get_team_info_by_name(NAME);
-      if (team_info.length == 0)
-      {
-        team_info = "Sorry! There are no teams with this name in this league";
-      }
-
       let coach_info = await coaches_utils.get_coach_info_by_name(NAME, -1)
-      if (coach_info.length == 0)
-      {
-        coach_info = "Sorry! There are no coaches with this name in this league";
+      let team_info = await teams_utils.get_team_info_by_name(NAME);
+
+      // let player_info = [];
+      if (player_info.length == 0) {
+        // throw{ status:400, message:"Sorry! There are no players with this name in this league"};
+        player_info = [];
+      
+      }
+      if (coach_info.length == 0) {
+        // throw{ status:400, message:"Sorry! There are no coaches with this name in this league"};
+        coach_info = [];
+      }
+      if (team_info.length == 0) {
+        //throw{ status:400, message:"Sorry! There are no teams with this name in this league"};
+        team_info = [];
       }
 
       let details = {
         players: player_info,
-        teams: team_info,
-        coaches: coach_info
+        coaches: coach_info,
+        teams: team_info
       };
 
-      req.session.lastSearch = {
-        query: `/searchByName/${NAME}`,
-        result: details
+      if (player_info.length == 0 && coach_info.length == 0 && team_info.length == 0)
+      {
+        req.session.lastSearch = {
+          query: `/searchByName/${NAME}`,
+          result: "No results matched your search query"
+        }  
+      } else {
+        req.session.lastSearch = {
+          query: `/searchByName/${NAME}`,
+          result: details
+        }
       }
 
     res.status(200).send(details);
@@ -242,15 +253,24 @@ router.get("/searchByNameFilterWithPositionId/:Name/:positionId", async (req, re
   let NAME = req.params.Name;
   try {
       let player_info = await players_utils.get_player_info_by_name(NAME, positionID);
-      if (player_info.length == 0)
-      {
-        player_info = "Sorry! There are no players with this name and position in this league";
+
+      if (player_info.length == 0) {
+        // throw{ status:400, message:"Sorry! There are no players with this name in this league"};
+        player_info = [];
       }
 
-      req.session.lastSearch = {
-        query: `/searchByNameFilterWithPositionId/${NAME}/${positionID}`,
-        result: player_info
+      if (player_info.length == 0) {
+        req.session.lastSearch = {
+          query: `/searchByNameFilterWithPositionId/${NAME}/${positionID}`,
+          result: "No results matched your search query"
+        }
+      } else {
+        req.session.lastSearch = {
+          query: `/searchByNameFilterWithPositionId/${NAME}/${positionID}`,
+          result: player_info
+        }
       }
+ 
 
       res.status(200).send(player_info);
   } catch (error) {
@@ -263,15 +283,16 @@ router.get("/searchByNameFilterWithTeamName/:Name/:teamName", async (req, res, n
   let NAME = req.params.Name;
   try {
       let player_info = await players_utils.get_player_info_by_name(NAME, teamNAME);
-      if (player_info.length == 0)
-      {
-        player_info = "Sorry! There are no players with this name and team in this league";
-      }
-
+      // let team_info = await teams_utils.get_team_info_by_name(NAME);
       let coach_info = await coaches_utils.get_coach_info_by_name(NAME, teamNAME)
-      if (coach_info.length == 0)
-      {
-        coach_info = "Sorry! There are no coaches with this name and team in this league";
+
+      if (player_info.length == 0) {
+        // throw{ status:400, message:"Sorry! There are no players with this name in this league"};
+        player_info = [];
+      }
+      if (coach_info.length == 0) {
+        // throw{ status:400, message:"Sorry! There are no coaches with this name in this league"};
+        coach_info = [];
       }
 
       let details = {
@@ -279,11 +300,19 @@ router.get("/searchByNameFilterWithTeamName/:Name/:teamName", async (req, res, n
         coaches: coach_info,
       };
 
-      req.session.lastSearch = {
-        query: `/searchByNameFilterWithTeamName/${NAME}/${teamNAME}`,
-        result: details
+      if (player_info.length == 0 && coach_info.length == 0)
+      {
+        req.session.lastSearch = {
+          query: `/searchByNameFilterWithTeamName/${NAME}/${teamNAME}`,
+          result: "No results matched your search query"
+        }
+      } else {
+        req.session.lastSearch = {
+          query: `/searchByNameFilterWithTeamName/${NAME}/${teamNAME}`,
+          result: details
+        }
       }
-
+      
       res.status(200).send(details);
   } catch (error) {
     next(error);

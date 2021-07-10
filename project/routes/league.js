@@ -13,6 +13,17 @@ router.get("/getDetails", async (req, res, next) => {
   }
 });
 
+router.get("/getEvents/:gameid", async (req, res, next) => {
+  try {
+    let gameid = req.params.gameid;
+    const getEvents_details = await league_utils.getEvents(gameid);
+    res.status(200).send(getEvents_details);
+  } catch (error) {
+    next(error);
+  }
+});
+
+
 router.get("/pastgames", async (req, res, next) => {
   try {
     const past_games = await DButils.execQuery(

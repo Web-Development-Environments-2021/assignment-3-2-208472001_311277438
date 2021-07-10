@@ -8,14 +8,14 @@ async function getTeamGames(teamID) {
     let past_games = past_home_team_games.concat(past_away_team_games);
     if (past_games.length == 0)
     {
-      past_games = "There are no past games for this team yet";
+      past_games = [];
     }
     let future_home_team_games = await DButils.execQuery(`SELECT * FROM dbo.games WHERE hometeamID = ${teamID} AND homeGoal IS NULL`);
     let future_away_team_games = await DButils.execQuery(`SELECT * FROM dbo.games WHERE awayteamID = ${teamID} AND awayGoal IS NULL`);
     let future_games = future_home_team_games.concat(future_away_team_games);
     if (future_games.length == 0)
     {
-      future_games = "There are no future games for this team yet";
+      future_games = [];
     }
 
     return {
@@ -38,11 +38,11 @@ async function getTeamGames(teamID) {
       );
 
       if (team.data.data.league.data.id != 271) {
-        return [];
+        return {};
       }
     
     } catch (error) {
-      return [];
+      return {};
     }
 
     return {
@@ -97,7 +97,8 @@ async function getTeamGames(teamID) {
     for (let i=0; i< relevant_teams.length; i++)
     {
         const teams_info = await get_team_info(relevant_teams[i]);
-        teams_details.push(teams_info);
+        if (teams_info != {})
+          teams_details.push(teams_info);
     }
 
 
@@ -112,8 +113,25 @@ async function getTeamGames(teamID) {
   return name;
 }
 
+async function getTeamLeague(teamID){
+
+  const team = await axios.get(
+    `https://soccer.sportmonks.com/api/v2.0/teams/${teamID}`,
+    {
+      params: {
+        include: "league",
+        api_token: process.env.api_token,
+      },
+    }
+  );
+  if(team.data.data.league.data.id == 271)
+    return { name: team.data.data.name, league: true};
+  return {league: false};
+}
+
   exports.getNameByTeamID = getNameByTeamID;
   exports.getTeamGames = getTeamGames;
   exports.get_team_info = get_team_info;
   exports.get_team_info_by_name = get_team_info_by_name;
+  exports.getNameByTeamID = getNameByTeamID;
 

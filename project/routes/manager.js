@@ -30,31 +30,14 @@ router.post("/addGame", async (req, res, next) => {
             if (typeof req.body.gamedate != 'string' || typeof req.body.gametime != 'string' || isNaN(req.body.hometeamID) || isNaN(req.body.awayteamID) || typeof req.body.field != 'string' || typeof req.body.referee != 'string'){
                 throw { status: 400, message: "incorrect inputs" };
             }
-
-            const fieldgame = await DButils.execQuery(
-                `SELECT name FROM dbo.stadiums WHERE name = '${req.body.field}'`
-            );
-
-            const refereegame = await DButils.execQuery(
-                `SELECT name FROM dbo.referees WHERE name = '${req.body.referee}'`
-            );
-
-            let dateReg = /^\d{4}[./-]\d{2}[./-]\d{2}$/;
+            
+            let dateReg = /^\d{2}[./-/:]\d{2}[./-/:]\d{4}$/;
             let isdatevalid = dateReg.test(req.body.gamedate);
             
             if(!isdatevalid){
                 res.status(201).send("The date is not valid");
-            }
-            else if (fieldgame.length == 0 ){
-                res.status(201).send("There is no stadium with this name");
-            }
-            else if (refereegame.length == 0){
-                res.status(201).send("There is no referee with this name");
-            }
+            }            
 
-            
-
-            // else if((req.body.gamedate).match(dateReg))
             else{
                 
                 let flag = true;
@@ -72,7 +55,8 @@ router.post("/addGame", async (req, res, next) => {
 
                 if(flag){
                     await DButils.execQuery(
-                        `INSERT INTO dbo.games (gamedate, gametime, hometeamID, awayteamID, field, homegoal, awaygoal, referee, stage) VALUES ('${req.body.gamedate}','${req.body.gametime}', '${req.body.hometeamID}','${req.body.awayteamID}','${req.body.field}', NULL, NULL, '${req.body.referee}', 'Championship Round')`
+                        `INSERT INTO dbo.games (gamedate, gametime, hometeamID, awayteamID, field, homegoal, awaygoal, referee, stage) VALUES ('${req.body.gamedate}','${req.body.gametime}', '${req.body.hometeamID}','${req.body.awayteamID}','${req.body.field}', NULL, NULL, '${req.body.referee}', 'Conference League Play-offs - Final
+                        ')`
                     );
                     res.status(201).send("game has been added");
                 }
