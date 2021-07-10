@@ -53,7 +53,17 @@ async function getLeagueDetails() {
   };
 }
 
+async function getEvents(gameid){
+  const events = await DButils.execQuery(`select * from dbo.events where gameid = '${gameid}'`);
+  if (events == []){
+    return "no events";
+  }
+  return events;
+}
 
+
+
+exports.getEvents = getEvents;
 exports.get_current_season = get_current_season;
 exports.getLeagueDetails = getLeagueDetails;
 

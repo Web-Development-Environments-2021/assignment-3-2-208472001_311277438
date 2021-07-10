@@ -151,6 +151,7 @@ router.delete("/favorites/:table/:id", async (req, res, next) => {
     let id = req.params.id;
     let table = req.params.table;
     
+
     if (isNaN(id)){
       throw { status: 400, message: "incorrect inputs" };
   }
